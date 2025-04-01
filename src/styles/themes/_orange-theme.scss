@@ -1,0 +1,41 @@
+/**
+ * Orange Theme
+ * 
+ * Color palette for the orange theme using a complementary color scheme.
+ * Primary: Orange
+ * Complementary: Blue
+ * Background: Dark gray with subtle blue tint
+ */
+
+// Orange Theme Colors
+$primary-color: #ff8a00 !default;           // Vibrant orange
+$primary-color-hover: #ff9d33 !default;     // Lighter orange for hover
+$secondary-color: #2c7bb6 !default;         // Complementary blue
+$secondary-color-hover: #3689c9 !default;   // Lighter blue for hover
+
+$success-color: #4caf50 !default;          // Success green
+$warning-color: #ffca28 !default;          // Warning yellow
+$danger-color: #f44336 !default;           // Danger red
+
+// Text colors
+$text-color: #e6e6e6 !default;             // Light gray for main text
+$text-muted: #a0a0a0 !default;             // Muted text color
+$text-on-primary: #1a1a1a !default;        // Dark text on orange (for contrast)
+$text-on-secondary: #ffffff !default;       // White text on blue
+
+// Background and surface colors
+$bg-color: #1a1d20 !default;               // Dark blue-gray background
+$card-bg: #222529 !default;                // Slightly lighter card background
+$input-bg: #2d3035 !default;               // Input background
+$tag-bg: #343840 !default;                 // Tag background
+$tag-bg-hover: #3e424d !default;           // Tag hover background
+
+// Border and focus colors
+$border-color: #3d424a !default;           // Border color
+$focus-color: rgba($primary-color, 0.5) !default; // Focus outline color (semi-transparent orange)
+
+// Additional theme-specific variables
+$accent-color: #ff5722 !default;           // A deeper orange accent
+$accent-color-hover: #ff6e40 !default;     // Lighter accent for hover
+$highlight-color: #ffb74d !default;        // Orange highlight color
+

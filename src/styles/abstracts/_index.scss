@@ -1,0 +1,15 @@
+/**
+ * Abstracts Index
+ * 
+ * Forwards all abstract modules (variables, mixins, functions, etc.)
+ * This makes them available to any file that uses this index.
+ */
+
+// First forward all theme variables, making them available for use
+@forward '../themes/orange-theme';
+
+// Forward other abstracts
+@forward 'variables';
+@forward 'mixins';
+@forward 'breakpoints';
+@forward 'functions';

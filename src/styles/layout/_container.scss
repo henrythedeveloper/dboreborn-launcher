@@ -1,0 +1,142 @@
+/**
+ * Container Styles
+ * 
+ * Main layout container and structure styles.
+ */
+
+ @use '../abstracts' as *;
+ @use '../base/animations' as *;
+
+ body {
+   margin: 0;
+   padding: 0;
+   font-family: var(--font-family);
+   background-color: var(--bg-color);
+   color: var(--text-color);
+   overflow: hidden;
+   line-height: var(--line-height-body);
+ }
+ 
+ .container {
+   position: relative;
+   width: 100vw;
+   height: 100vh;
+   overflow: hidden;
+ 
+   // Loading/Initial setup screen
+   .initial-setup {
+     width: 100%;
+     height: 100%;
+     background-color: var(--bg-color);
+     z-index: 10;
+     position: absolute;
+     left: 0;
+     top: 0;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     
+     // Add an orange gradient overlay
+     &::before {
+       content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       background: radial-gradient(
+         circle at center,
+         rgba(255, 138, 0, 0.05) 0%,
+         rgba(0, 0, 0, 0) 70%
+       );
+       pointer-events: none;
+     }
+ 
+     &-text {
+       color: var(--text-color);
+       display: flex;
+       flex-direction: column;
+       justify-content: center;
+       align-items: center;
+       gap: var(--spacing-md);
+       font-size: var(--font-size-lg);
+       letter-spacing: 0.5px;
+       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+       
+       // Orange accent for loading text
+       span {
+         color: var(--primary-color);
+         font-weight: 600;
+       }
+ 
+       &::before {
+         content: "";
+         background: url("@assets/bouncing-ball.svg");
+         width: 32px;
+         height: 32px;
+         display: inline-block;
+         filter: invert(1);
+         
+         // Add orange tint to the spinner
+         filter: invert(60%) sepia(94%) saturate(1352%) hue-rotate(360deg) brightness(101%) contrast(105%);
+         
+         // Add pulsing animation to the spinner
+         @include pulse;
+       }
+     }
+     
+     // Fade out animation when complete
+     &.fade-out {
+       @include fade-out(0.5s);
+       pointer-events: none;
+     }
+   }
+ 
+   // Main game container
+   .game-container {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background-color: var(--bg-color);
+     overflow: hidden;
+   }
+ }
+ 
+ // App utilities
+ .hidden {
+   display: none !important;
+ }
+ 
+ .visually-hidden {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   margin: -1px;
+   padding: 0;
+   overflow: hidden;
+   clip: rect(0, 0, 0, 0);
+   white-space: nowrap;
+   border-width: 0;
+ }
+ 
+ // Overlay utilities
+ .overlay {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.7);
+   z-index: 9;
+   
+   &.fade-in {
+     @include fade-in(0.3s);
+   }
+   
+   &.fade-out {
+     @include fade-out(0.3s);
+     pointer-events: none;
+   }
+ }

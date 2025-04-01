@@ -1,0 +1,221 @@
+/**
+ * Global Mixins
+ * 
+ * Reusable mixins to standardize common patterns and reduce code duplication.
+ */
+
+ @use 'sass:map';
+ @use 'breakpoints' as b;
+ 
+ /**
+  * Flex center
+  * Centers content using flexbox
+  */
+ @mixin flex-center {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+ 
+ /**
+  * Flex column
+  * Vertical arrangement with flexbox
+  */
+ @mixin flex-column {
+   display: flex;
+   flex-direction: column;
+ }
+ 
+ /**
+  * Grid auto-fit
+  * Responsive grid layout with auto-fit
+  */
+ @mixin grid-auto-fit($min-size: 250px, $gap: var(--spacing-md)) {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax($min-size, 1fr));
+   gap: $gap;
+ }
+ 
+ /**
+  * Truncate text
+  * Cut text with ellipsis
+  */
+ @mixin truncate {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+ }
+ 
+ /**
+  * Interactive element
+  * Consistent hover/focus behavior
+  */
+ @mixin interactive {
+   transition: all var(--transition-normal);
+   cursor: pointer;
+ 
+   &:hover {
+     transform: translateY(-1px);
+   }
+ 
+   &:active {
+     transform: translateY(0);
+   }
+ 
+   &:focus-visible {
+     outline: 2px solid var(--focus-color);
+     outline-offset: 2px;
+   }
+ }
+ 
+ /**
+  * Card styles
+  * Consistent card appearance
+  */
+ @mixin card {
+   background: var(--card-bg);
+   border-radius: var(--border-radius-md);
+   box-shadow: var(--shadow-sm);
+   padding: var(--spacing-md);
+   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+ 
+   &:hover {
+     box-shadow: var(--shadow-md);
+     transform: translateY(-2px);
+   }
+ }
+ 
+ /**
+  * Button base styles
+  * Consistent button appearance
+  */
+ @mixin button-base {
+   padding: var(--spacing-xs) var(--spacing-md);
+   border-radius: var(--border-radius-sm);
+   border: none;
+   font-size: var(--font-size-md);
+   font-weight: 600;
+   cursor: pointer;
+   transition: all var(--transition-normal);
+   text-align: center;
+ 
+   &:disabled {
+     opacity: 0.6;
+     cursor: not-allowed;
+   }
+ }
+ 
+ /**
+  * Primary button
+  * Main call-to-action style
+  */
+ @mixin button-primary {
+   @include button-base;
+   
+   background: var(--primary-color);
+   color: var(--text-on-primary);
+ 
+   &:hover:not(:disabled) {
+     background: var(--primary-color-hover);
+     transform: translateY(-1px);
+   }
+   
+   &:active:not(:disabled) {
+     transform: translateY(0);
+   }
+ }
+ 
+ /**
+  * Secondary button
+  * Alternative button style
+  */
+ @mixin button-secondary {
+   @include button-base;
+   
+   background: var(--secondary-color);
+   color: var(--text-on-secondary);
+ 
+   &:hover:not(:disabled) {
+     background: var(--secondary-color-hover);
+     transform: translateY(-1px);
+   }
+   
+   &:active:not(:disabled) {
+     transform: translateY(0);
+   }
+ }
+ 
+ /**
+  * Loading skeleton
+  * Consistent loading state appearance
+  */
+ @mixin skeleton-loading {
+   background: linear-gradient(
+     90deg,
+     var(--card-bg) 25%,
+     var(--border-color) 50%,
+     var(--card-bg) 75%
+   );
+   background-size: 200% 100%;
+   animation: skeleton-loading 1.5s infinite;
+ }
+ 
+ /**
+  * Custom scrollbar
+  * Consistent scrollbar styling
+  */
+ @mixin custom-scrollbar {
+   &::-webkit-scrollbar {
+     width: 8px;
+     height: 8px;
+   }
+ 
+   &::-webkit-scrollbar-track {
+     background: var(--bg-color);
+   }
+ 
+   &::-webkit-scrollbar-thumb {
+     background: var(--secondary-color);
+     border-radius: var(--border-radius-pill);
+ 
+     &:hover {
+       background: var(--secondary-color-hover);
+     }
+   }
+ }
+ 
+ /**
+  * Absolute center
+  * Center element absolutely within container
+  */
+ @mixin absolute-center {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+ }
+ 
+ /**
+  * Glass effect
+  * Create a frosted glass effect
+  */
+ @mixin glass-effect($opacity: 0.1, $blur: 10px) {
+   background: rgba(255, 255, 255, $opacity);
+   backdrop-filter: blur($blur);
+   -webkit-backdrop-filter: blur($blur);
+   border: 1px solid rgba(255, 255, 255, 0.1);
+ }
+ 
+ /**
+  * Overlay
+  * Create a dark overlay
+  */
+ @mixin overlay($color: #000, $opacity: 0.6) {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba($color, $opacity);
+ }
+

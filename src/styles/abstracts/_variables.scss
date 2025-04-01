@@ -1,0 +1,132 @@
+/**
+ * Variables
+ * 
+ * Central location for all application variables.
+ * Theme variables are loaded from the theme file.
+ */
+
+// Use the theme variables
+@use '../themes/orange-theme' as theme;
+
+// Spacing
+$spacing-xxs: 0.25rem !default;
+$spacing-xs: 0.5rem !default;
+$spacing-sm: 0.75rem !default;
+$spacing-md: 1rem !default;
+$spacing-lg: 1.5rem !default;
+$spacing-xl: 2rem !default;
+$spacing-xxl: 3rem !default;
+
+// Typography
+$font-family: 'Exo 2 Variable', 'Segoe UI', Roboto, sans-serif !default;
+$font-size-xs: 0.75rem !default;
+$font-size-sm: 0.875rem !default;
+$font-size-md: 1rem !default;
+$font-size-lg: 1.25rem !default;
+$font-size-xl: 1.5rem !default;
+$font-size-xxl: 2rem !default;
+
+$line-height-body: 1.5 !default;
+$line-height-heading: 1.2 !default;
+
+// Borders
+$border-radius-sm: 4px !default;
+$border-radius-md: 6px !default;
+$border-radius-lg: 8px !default;
+$border-radius-pill: 9999px !default;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2) !default;
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.2) !default;
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2) !default;
+
+// Layout
+$content-width-sm: 640px !default;
+$content-width-md: 768px !default;
+$content-width-lg: 1024px !default;
+$content-width-xl: 1280px !default;
+
+// Z-indices
+$z-index-dropdown: 1000 !default;
+$z-index-modal: 2000 !default;
+$z-index-tooltip: 3000 !default;
+
+// Transitions
+$transition-fast: 0.15s ease !default;
+$transition-normal: 0.25s ease !default;
+$transition-slow: 0.4s ease !default;
+
+// Export CSS variables
+:root {
+  // Colors (from theme)
+  --primary-color: #{theme.$primary-color};
+  --primary-color-hover: #{theme.$primary-color-hover};
+  --secondary-color: #{theme.$secondary-color};
+  --secondary-color-hover: #{theme.$secondary-color-hover};
+  
+  --success-color: #{theme.$success-color};
+  --warning-color: #{theme.$warning-color};
+  --danger-color: #{theme.$danger-color};
+  
+  --text-color: #{theme.$text-color};
+  --text-muted: #{theme.$text-muted};
+  --text-on-primary: #{theme.$text-on-primary};
+  --text-on-secondary: #{theme.$text-on-secondary};
+  
+  --bg-color: #{theme.$bg-color};
+  --card-bg: #{theme.$card-bg};
+  --input-bg: #{theme.$input-bg};
+  --tag-bg: #{theme.$tag-bg};
+  --tag-bg-hover: #{theme.$tag-bg-hover};
+  
+  --border-color: #{theme.$border-color};
+  --focus-color: #{theme.$focus-color};
+  
+  // Spacing
+  --spacing-xxs: #{$spacing-xxs};
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+  --spacing-xxl: #{$spacing-xxl};
+  
+  // Typography
+  --font-family: #{$font-family};
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-md: #{$font-size-md};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+  --font-size-xxl: #{$font-size-xxl};
+  
+  --line-height-body: #{$line-height-body};
+  --line-height-heading: #{$line-height-heading};
+  
+  // Borders
+  --border-radius-sm: #{$border-radius-sm};
+  --border-radius-md: #{$border-radius-md};
+  --border-radius-lg: #{$border-radius-lg};
+  --border-radius-pill: #{$border-radius-pill};
+  
+  // Shadows
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+  
+  // Layout
+  --content-width-sm: #{$content-width-sm};
+  --content-width-md: #{$content-width-md};
+  --content-width-lg: #{$content-width-lg};
+  --content-width-xl: #{$content-width-xl};
+  
+  // Z-indices
+  --z-index-dropdown: #{$z-index-dropdown};
+  --z-index-modal: #{$z-index-modal};
+  --z-index-tooltip: #{$z-index-tooltip};
+  
+  // Transitions
+  --transition-fast: #{$transition-fast};
+  --transition-normal: #{$transition-normal};
+  --transition-slow: #{$transition-slow};
+}

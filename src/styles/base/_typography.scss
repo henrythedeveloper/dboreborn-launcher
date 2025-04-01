@@ -1,0 +1,211 @@
+/**
+ * Typography Styles
+ *
+ * Base typography styles and text utilities.
+ */
+
+// Use modules with namespaces
+@use '../abstracts/mixins' as m;
+@use '../abstracts/breakpoints' as b;
+
+// Font imports (if using web fonts)
+
+@font-face {
+    font-family: 'Exo 2 Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src: url(@fontsource-variable/exo-2/files/exo-2-latin-wght-normal.woff2) format('woff2-variations');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+// Base typographic reset
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-body);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+  line-height: var(--line-height-heading);
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: var(--font-size-xxl);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+}
+
+h4 {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-sm);
+}
+
+// Responsive typography
+@include b.screen(lg) {
+  h1 {
+    font-size: calc(var(--font-size-xxl) * 1.2);
+  }
+
+  h2 {
+    font-size: calc(var(--font-size-xl) * 1.1);
+  }
+}
+
+// Links
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--primary-color-hover);
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 2px;
+  }
+}
+
+// Paragraphs
+p {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Lists
+ul, ol {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  padding-left: var(--spacing-lg);
+
+  li {
+    margin-bottom: var(--spacing-xs);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Text utilities
+.text {
+  &-center {
+    text-align: center;
+  }
+
+  &-right {
+    text-align: right;
+  }
+
+  &-left {
+    text-align: left;
+  }
+
+  &-justify {
+    text-align: justify;
+  }
+
+  &-uppercase {
+    text-transform: uppercase;
+  }
+
+  &-lowercase {
+    text-transform: lowercase;
+  }
+
+  &-capitalize {
+    text-transform: capitalize;
+  }
+
+  &-truncate {
+    @include m.truncate;
+  }
+
+  // Font weights
+  &-normal {
+    font-weight: 400;
+  }
+
+  &-medium {
+    font-weight: 500;
+  }
+
+  &-semibold {
+    font-weight: 600;
+  }
+
+  &-bold {
+    font-weight: 700;
+  }
+
+  // Text colors
+  &-primary {
+    color: var(--primary-color);
+  }
+
+  &-secondary {
+    color: var(--secondary-color);
+  }
+
+  &-success {
+    color: var(--success-color);
+  }
+
+  &-warning {
+    color: var(--warning-color);
+  }
+
+  &-danger {
+    color: var(--danger-color);
+  }
+
+  &-muted {
+    color: var(--text-muted);
+  }
+}
+
+// Special typography styles for launcher
+.game-title {
+  font-size: var(--font-size-xxl);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-color);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: var(--spacing-xs);
+
+  // Orange gradient text
+  background: linear-gradient(to right, var(--primary-color), var(--primary-color-hover));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}

@@ -1,0 +1,76 @@
+/**
+ * SCSS Functions
+ * 
+ * Utility functions for calculations and transformations.
+ */
+
+ @use 'sass:math';
+ @use 'sass:color';
+ @use 'sass:map';
+ 
+ // Convert pixels to rem
+ @function rem($pixels, $context: 16) {
+   @return math.div($pixels, $context) * 1rem;
+ }
+ 
+ // Convert pixels to em
+ @function em($pixels, $context: 16) {
+   @return math.div($pixels, $context) * 1em;
+ }
+ 
+ // Calculate contrast ratio
+ @function contrast-ratio($color1, $color2) {
+   $luminance1: luminance($color1);
+   $luminance2: luminance($color2);
+   
+   @if $luminance1 > $luminance2 {
+     @return math.div($luminance1 + 0.05, $luminance2 + 0.05);
+   } @else {
+     @return math.div($luminance2 + 0.05, $luminance1 + 0.05);
+   }
+ }
+ 
+ // Calculate luminance
+ @function luminance($color) {
+   $red: color.red($color) / 255;
+   $green: color.green($color) / 255;
+   $blue: color.blue($color) / 255;
+   
+   $red: if($red <= 0.03928, math.div($red, 12.92), math.pow(math.div($red + 0.055, 1.055), 2.4));
+   $green: if($green <= 0.03928, math.div($green, 12.92), math.pow(math.div($green + 0.055, 1.055), 2.4));
+   $blue: if($blue <= 0.03928, math.div($blue, 12.92), math.pow(math.div($blue + 0.055, 1.055), 2.4));
+   
+   @return 0.2126 * $red + 0.7152 * $green + 0.0722 * $blue;
+ }
+ 
+ // Get color-contrast (light or dark text based on background)
+ @function get-contrast-color($color) {
+   $luminance: luminance($color);
+   
+   @return if($luminance > 0.55, #000, #fff);
+ }
+ 
+ // Darken or lighten based on color lightness
+ @function adaptive-color($color, $percentage: 10%) {
+   @if color.lightness($color) > 50% {
+     @return color.darken($color, $percentage);
+   } @else {
+     @return color.lighten($color, $percentage);
+   }
+ }
+ 
+ // Calculate a z-index value
+ @function z-index($level: 'default') {
+   $z-indexes: (
+     'below': -1,
+     'default': 1,
+     'above': 10,
+     'dropdown': 1000,
+     'sticky': 1020,
+     'fixed': 1030,
+     'modal': 2000,
+     'tooltip': 3000
+   );
+   
+   @return map.get($z-indexes, $level);
+ }

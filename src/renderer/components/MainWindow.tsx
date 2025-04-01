@@ -10,18 +10,18 @@ import { initialSetup } from "../utils/initialSetup";
 import { gamesSetup } from "../utils/gamesSetup";
 import { gamesPatch } from "../utils/gamesPatch";
 import { updateConfigJson } from "../utils/updateConfigJson";
-import { enableDebugMode, log } from "../utils/debug";
+import { enableDebugMode, log, saveLogsToFile } from "../utils/debug";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 const MainWindow: React.FC = () => {
   const [configLocal, setConfigLocal] = useState<LocalConfig | null>(null);
   const [configRemote, setConfigRemote] = useState<RemoteConfig | null>(null);
-  const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [gameInfo, setGameInfo] = useState<Game | null>(null);
   const [didFinishInitialSetup, setDidFinishInitialSetup] = useState<boolean>(false);
   const [didFinishGamesSetup, setDidFinishGamesSetup] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
 
   // Debug Mode
   useEffect(() => {
@@ -87,7 +87,8 @@ const MainWindow: React.FC = () => {
           setConfigRemote(fallbackConfig);
           
           if (fallbackConfig.games.length > 0) {
-            setSelectedGame(fallbackConfig.games[0].name);
+            const game = fallbackConfig.games[0];
+            setGameInfo(game);
           }
           
           setDidFinishInitialSetup(true);
@@ -97,22 +98,10 @@ const MainWindow: React.FC = () => {
         setConfigRemote(remoteConfig);
         log("Remote config loaded", remoteConfig);
 
-        const currentDir = window.electronAPI.sendSync("get-file-path", "");
-        const configLocalPath = isDevelopment
-          ? "launcher-config.json"
-          : `${currentDir}\\launcher-config.json`;
-        
-        // Set the first game as default if available
+        // Always use the first game since we're only handling one game
         if (remoteConfig?.games?.length > 0) {
           const game = remoteConfig.games[0];
           setGameInfo(game);
-
-          if (configLocal?.lastSelectedGame?.length > 0) {
-            setSelectedGame(configLocal.lastSelectedGame);
-          } else {
-            setSelectedGame(game.name);
-            updateConfigJson("lastSelectedGame", game.name, configLocalPath);
-          }
         }
   
         const setupSuccessful = await initialSetup(configLocal, remoteConfig);
@@ -138,7 +127,8 @@ const MainWindow: React.FC = () => {
         setConfigRemote(fallbackConfig);
         
         if (fallbackConfig.games.length > 0) {
-          setSelectedGame(fallbackConfig.games[0].name);
+          const game = fallbackConfig.games[0];
+          setGameInfo(game);
         }
         
         setDidFinishInitialSetup(true);
@@ -155,8 +145,9 @@ const MainWindow: React.FC = () => {
     if (!configRemote) return;
     
     try {
-      for (const game of configRemote.games || []) {
-        await gamesSetup(game);
+      // Only setup the first game (since we're only handling one)
+      if (configRemote.games && configRemote.games.length > 0) {
+        await gamesSetup(configRemote.games[0]);
       }
       setDidFinishGamesSetup(true);
     } catch (e) {
@@ -172,33 +163,12 @@ const MainWindow: React.FC = () => {
 
   // Patch games after setup
   const patchGames = async (): Promise<void> => {
-    if (!configRemote) return;
+    if (!configRemote || !gameInfo) return;
     
     try {
-      for (const game of configRemote.games || []) {
-        await gamesPatch(game, setIsUpdating);
-      }
+      await gamesPatch(gameInfo, setIsUpdating);
     } catch (e) {
       showError((e as Error).message);
-    }
-  };
-
-  const handleGameClick = async (game: Game): Promise<void> => {
-    if (isUpdating) {
-      showWarn("An update is currently in progress. Please wait.");
-      return;
-    }
-
-    const currentDir = window.electronAPI.sendSync("get-file-path", "");
-    const configLocalPath = isDevelopment
-      ? "launcher-config.json"
-      : `${currentDir}\\launcher-config.json`;
-
-    try {
-      setSelectedGame(game.name);
-      await updateConfigJson("lastSelectedGame", game.name, configLocalPath);
-    } catch (error) {
-      showError(`Error updating selected game: ${(error as Error).message}`);
     }
   };
 
@@ -208,48 +178,74 @@ const MainWindow: React.FC = () => {
     }
   }, [didFinishGamesSetup]);
 
+  // Toggle settings panel
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+  };
+
+  // Export logs for settings
+  const handleExportLogs = async () => {
+    const success = await saveLogsToFile();
+    if (success) {
+      showWarn("Debug logs have been saved to launcher-debug.log");
+    } else {
+      showError("Failed to save debug logs");
+    }
+  };
 
   return (
     <div className="container">
       <div className="initial-setup">
         <span className="initial-setup-text">Initializing...</span>
       </div>
-      <div className="side-menu">
-        {configRemote?.games?.map((game) => (
-          <div
-            key={game.name}
-            className={`game-icon ${game.name.toLowerCase()} ${
-              selectedGame === game.name ? "selected" : ""
-            }`}
-            onClick={() => handleGameClick(game)}
-          ></div>
-        ))}
+      
+      {/* Settings button in top right */}
+      <div className="settings-icon" onClick={toggleSettings}>
+        <div className="gear-icon"></div>
       </div>
-      <div className="patcher">
-        {configRemote?.games?.map((game) => (
+      
+      {/* Settings panel */}
+      {showSettings && (
+        <div className="settings-panel">
+          <div className="settings-header">
+            <h2>Settings</h2>
+            <button className="close-button" onClick={toggleSettings}>×</button>
+          </div>
+          <div className="settings-content">
+            <button className="settings-button" onClick={handleExportLogs}>
+              Export Debug Logs
+            </button>
+            <div className="version-info">
+              <p>Launcher Version: {configRemote?.launcherVer || "Unknown"}</p>
+              <p>Client Version: {gameInfo?.clientVer || "Unknown"}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main game panel */}
+      <div className="game-container">
+        {gameInfo && (
           <div
-            key={game.name}
-            id={`game-container-${game.name}`}
-            className={`game-patcher ${game.name.toLowerCase()} ${
-              selectedGame === game.name ? "active" : ""
-            }`}
+            id={`game-container-${gameInfo.name}`}
+            className={`game-patcher ${gameInfo.name.toLowerCase()} active`}
           >
-            <div className={`total-progress ${game.name}`}>
-              <div className={`total-mid ${game.name}`}>
-                <div className={`total-bar ${game.name}`} />
+            <div className={`total-progress ${gameInfo.name}`}>
+              <div className={`total-mid ${gameInfo.name}`}>
+                <div className={`total-bar ${gameInfo.name}`} />
               </div>
             </div>
-            <span className={`txt-status ${game.name} text`}></span>
-            <span className={`txt-progress ${game.name} text`}></span>
-            <span className={`txt-download-speed ${game.name} text`}></span>
-            <span className={`txt-time-remaining ${game.name} text`}></span>
-            <button className={`btn-start ${game.name}`}>Play</button>
+            <span className={`txt-status ${gameInfo.name} text`}></span>
+            <span className={`txt-progress ${gameInfo.name} text`}></span>
+            <span className={`txt-download-speed ${gameInfo.name} text`}></span>
+            <span className={`txt-time-remaining ${gameInfo.name} text`}></span>
+            <button className={`btn-start ${gameInfo.name}`}>Play</button>
             <button
-              className={`btn-start disabled ${game.name}`}
+              className={`btn-start disabled ${gameInfo.name}`}
               style={{ display: "none" }}
             ></button>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

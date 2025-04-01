@@ -5,7 +5,7 @@
     "games": [
         {
             "name": "dbo",
-            "clientVer": 1,
+            "clientVer": 2,
             "patchVer": 1
         }
     ]
