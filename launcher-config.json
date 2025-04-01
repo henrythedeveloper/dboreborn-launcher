@@ -1,0 +1,12 @@
+{
+    "updaterUrl": "http://localhost:8002/config.json",
+    "launcherVer": 1,
+    "lastSelectedGame": "dbo",
+    "games": [
+        {
+            "name": "dbo",
+            "clientVer": 1,
+            "patchVer": 1
+        }
+    ]
+}
