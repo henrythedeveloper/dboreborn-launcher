@@ -1,12 +1,25 @@
 import React, { createContext, useContext } from 'react';
 import { Game, LocalConfig, RemoteConfig } from '../../types';
 
+
+export interface NewsItem {
+    id: number;
+    title: string;
+    date: string; 
+    content: string;
+    gameId: string;
+    type: 'news' | 'patch';
+    imageUrl?: string;
+}
+
 interface AppContextType {
   configLocal: LocalConfig | null;
   configRemote: RemoteConfig | null;
   gameInfo: Game | null;
   isUpdating: boolean;
   setIsUpdating: (isUpdating: boolean) => void;
+  newsItems?: NewsItem[];
+  setNewsItems?: (news: NewsItem[]) => void;
 }
 
 // Default values
@@ -15,7 +28,9 @@ const defaultContext: AppContextType = {
   configRemote: null,
   gameInfo: null,
   isUpdating: false,
-  setIsUpdating: () => {}
+  setIsUpdating: () => {},
+  newsItems: [],
+  setNewsItems: () => {}
 };
 
 // Create the context

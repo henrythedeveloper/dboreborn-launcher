@@ -50,8 +50,8 @@ const getSevenZipBinPath = (): string => {
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 960,
-    height: 540,
+    width: 1440,
+    height: 810,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,

@@ -14,6 +14,8 @@ import { log } from "../utils/debug";
 import InitialSetupScreen from "./InitialSetupScreen";
 import GamePatcher from "./GamePatcher";
 import SettingsPanel from "./SettingsPanel";
+import NewsSlider from "./NewsSlider";
+import BackToTop from "./BackToTop";
 import DebugModeHandler from "./DebugModeHandler";
 import { AppContextProvider } from "./AppContext";
 
@@ -88,7 +90,7 @@ const MainWindow: React.FC = () => {
         setConfigRemote(remoteConfig);
         log("Remote config loaded", remoteConfig);
 
-        // Always use the first game since we're only handling one game
+        // Always use the first game
         if (remoteConfig?.games?.length > 0) {
           const game = remoteConfig.games[0];
           setGameInfo(game);
@@ -135,7 +137,7 @@ const MainWindow: React.FC = () => {
     if (!configRemote) return;
     
     try {
-      // Only setup the first game (since we're only handling one)
+      // Only setup the first game 
       if (configRemote.games && configRemote.games.length > 0) {
         await gamesSetup(configRemote.games[0]);
       }
@@ -202,11 +204,54 @@ const MainWindow: React.FC = () => {
         
         {/* Main Game Container */}
         {gameInfo && (
-          <GamePatcher 
-            game={gameInfo}
-            isUpdating={isUpdating}
-          />
+          <div className="game-container">
+            <GamePatcher 
+              game={gameInfo}
+              isUpdating={isUpdating}
+            />
+
+            {/* News Slider Component - Added here */}
+            {!isInitializing && (
+              <NewsSlider game={gameInfo} />
+            )}
+          </div>
         )}
+        {/* Additional scrollable content below the fold */}
+        {!isInitializing && gameInfo && (
+          <div className="additional-content">
+            <h2>Additional Content</h2>
+            <p>Scroll down to see more launcher content and features.</p>
+          {/* Placeholder for future components */}
+            <div className="placeholder-section">
+                <h3>Coming Soon: Server Status</h3>
+                <p>This area will show real-time information about game servers, including player counts, server health, and maintenance schedules.</p>
+            </div>
+              
+            <div className="placeholder-section">
+              <h3>Coming Soon: Community Hub</h3>
+              <p>Connect with other players, join guilds, see community activity, and stay updated with the latest tournaments and events.</p>
+            </div>
+
+            <div className="content-grid">
+              <div className="placeholder-section">
+                <h3>Player Achievements</h3>
+                <p>View your recent achievements and track your progress toward completing in-game challenges.</p>
+              </div>
+              
+              <div className="placeholder-section">
+                <h3>Media Gallery</h3>
+                <p>Explore screenshots, videos, concept art, and other media from the game universe.</p>
+              </div>
+            </div>
+
+            <div className="placeholder-section">
+              <h3>Coming Soon: Character Profiles</h3>
+              <p>Manage your characters, customize their appearance, and review your stats all from the launcher.</p>
+            </div>
+          </div>
+        )}
+        {/* Back to top button */}
+        <BackToTop />
       </div>
     </AppContextProvider>
   );
