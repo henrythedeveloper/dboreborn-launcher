@@ -25,7 +25,10 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ game }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  // Track whether auto-rotation should be paused
+  const [isPaused, setIsPaused] = useState(false);
+  // Track the ID of the hovered item
+  const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
   
   // Fetch news from a remote source or fallback to local examples
   useEffect(() => {
@@ -68,21 +71,40 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ game }) => {
     setCurrentIndex(newIndex);
   };
   
-  // Auto-rotate news items every 10 seconds, but only if not hovered
+  // Auto-rotate news items every 10 seconds, but only if not paused
   useEffect(() => {
-    if (news.length <= 1 || isHovered) return;
+    if (news.length <= 1 || isPaused) return;
     
     const interval = setInterval(() => {
       goToNext();
     }, 10000);
     
     return () => clearInterval(interval);
-  }, [currentIndex, news.length, isHovered]);
+  }, [currentIndex, news.length, isPaused]);
 
   // Handle news item click
   const handleNewsClick = (newsItem: NewsItem) => {
     log("News item clicked:", newsItem.title);
     // You could add functionality here to open a news detail view
+  };
+  
+  // Mouse enter/leave handlers for individual news items
+  const handleItemMouseEnter = (id: number) => {
+    setHoveredItemId(id);
+  };
+  
+  const handleItemMouseLeave = () => {
+    setHoveredItemId(null);
+  };
+  
+  // Mouse enter/leave handlers for the entire slider
+  const handleSliderMouseEnter = () => {
+    setIsPaused(true);
+  };
+  
+  const handleSliderMouseLeave = () => {
+    setIsPaused(false);
+    setHoveredItemId(null);
   };
   
   // If there's no game, loading, or no news, show appropriate message
@@ -115,8 +137,8 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ game }) => {
   return (
     <div 
       className="news-slider"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleSliderMouseEnter}
+      onMouseLeave={handleSliderMouseLeave}
     >
       <div className="news-header">
         <h3>Latest Updates</h3>
@@ -131,24 +153,25 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ game }) => {
         </div>
         
         <div className="news-items-container">
-          {itemsToShow.map((item,index) => (
+          {itemsToShow.map((item) => (
             <div
               key={item.id}
-              className={`news-item ${isHovered ? 'hovered' : ''}`} 
+              className={`news-item ${hoveredItemId === item.id ? 'hovered' : ''}`} 
               onClick={() => handleNewsClick(item)}
+              onMouseEnter={() => handleItemMouseEnter(item.id)}
+              onMouseLeave={handleItemMouseLeave}
             >
-            <div className="news-item-image">
-              <img src={item.imageUrl} alt={item.title} />
-              <div className="news-item-overlay">
-                <span className="news-item-type">{item.type === 'patch' ? 'PATCH' : 'NEWS'}</span>
-                <h4 className="news-item-title">{item.title}</h4>
-                <span className="news-item-date">{item.date}</span>
+              <div className="news-item-image">
+                <img src={item.imageUrl} alt={item.title} />
+                <div className="news-item-overlay">
+                  <span className="news-item-type">{item.type === 'patch' ? 'PATCH' : 'NEWS'}</span>
+                  <h4 className="news-item-title">{item.title}</h4>
+                  <span className="news-item-date">{item.date}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-
+          ))}
+        </div>
         
         <div className="news-navigation next" onClick={goToNext}>
           <img src={rightArrowIcon} alt="Next" />
