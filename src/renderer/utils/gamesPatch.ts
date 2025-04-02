@@ -78,7 +78,7 @@ export const gamesPatch = async (
   /**
    * Set up button for action
    */
-  const setupButton = (buttonText: string, statusText: string, clickHandler: EventListener) => {
+  const setupButton = (buttonText: string, clickHandler: EventListener) => {
     setIsUpdating(false);
     // Remove any existing handlers
     startButton.removeEventListener("click", handlePatchClick);
@@ -86,7 +86,6 @@ export const gamesPatch = async (
     // Add the new handler
     startButton.addEventListener("click", clickHandler);
     showText(`.btn-start.${game?.name}`, buttonText);
-    showText(`.txt-status.${game?.name}`, statusText);
   };
 
   /**
@@ -184,17 +183,17 @@ export const gamesPatch = async (
 
   // Wait for install click
   const waitForInstallClick = async (): Promise<void> => {
-    setupButton("Install", "Game is not yet installed", handleInstallClick);
+    setupButton("Install", handleInstallClick);
   };
 
   // Wait for client update click
   const waitForClientUpdateClick = async (): Promise<void> => {
-    setupButton("Update Client", "Client update available", handleInstallClick);
+    setupButton("Update Client", handleInstallClick);
   };
   
   // Wait for patch click
   const waitForPatchClick = async (): Promise<void> => {
-    setupButton("Update", "Updates available", handlePatchClick);
+    setupButton("Update", handlePatchClick);
   };
 
   // Handle install/update client click

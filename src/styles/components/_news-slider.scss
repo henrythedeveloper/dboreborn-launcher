@@ -4,96 +4,96 @@
  * Styles for the news and patch notes slider component with image cards and hover effects.
  */
 
- @use '../abstracts' as *;
- @use '../base/animations' as a;
- 
- .news-slider {
-   position: absolute;
-   bottom: 0px;
-   left: 50%;
+@use '../abstracts' as *;
+@use '../base/animations' as a;
+
+.news-slider {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
   transform: translateX(-50%);
-   width: var(--content-width-xl);
-   background: rgba(0, 0, 0, 0.7);
-   border-radius: var(--border-radius-md);
-   margin-bottom: 1rem;
-   padding: var(--spacing-md);
-   box-shadow: var(--shadow-md);
-   border: 1px solid var(--border-color);
-   z-index: 2;
-   
-   // Orange accent border
-   &::before {
-     content: '';
-     position: absolute;
-     top: 0;
-     left: 0;
-     width: 4px;
-     height: 100%;
-     background: linear-gradient(to bottom, var(--primary-color), var(--primary-color-hover));
-     border-top-left-radius: var(--border-radius-md);
-     border-bottom-left-radius: var(--border-radius-md);
-   }
-   
-   // Header section with title and pagination
-   .news-header {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin-bottom: var(--spacing-sm);
-     padding-bottom: var(--spacing-xs);
-     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-     
-     h3 {
-       margin: 0;
-       font-size: var(--font-size-md);
-       font-weight: 600;
-       color: var(--primary-color);
-     }
-     
-     .news-pagination {
-       font-size: var(--font-size-sm);
-       color: var(--text-muted);
-     }
-   }
-   
-   // Content section with navigation and news item
-   .news-content {
-     display: flex;
-     align-items: center;
-     padding: var(--spacing-xs) 0;
-     
-     .news-navigation {
-       width: 28px;
-       height: 28px;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       cursor: pointer;
-       opacity: 0.6;
-       transition: opacity var(--transition-fast), transform var(--transition-fast);
-       border-radius: 50%;
-       background-color: rgba(0, 0, 0, 0.4);
-       
-       img {
-         width: 18px;
-         height: 18px;
-         filter: brightness(0) invert(1); // Make icon white
-       }
-       
-       &:hover {
-         opacity: 1;
-         transform: scale(1.1);
-         background-color: var(--primary-color);
-       }
-       
-       &.prev {
-         margin-right: var(--spacing-sm);
-       }
-       
-       &.next {
-         margin-left: var(--spacing-sm);
-       }
-     }
+  width: var(--content-width-xl);
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: var(--border-radius-md);
+  margin-bottom: 1rem;
+  padding: var(--spacing-sm);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  z-index: 2;
+  
+  // Orange accent border
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), var(--primary-color-hover));
+    border-top-left-radius: var(--border-radius-md);
+    border-bottom-left-radius: var(--border-radius-md);
+  }
+  
+  // Header section with title and pagination
+  .news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    h3 {
+      margin: 0;
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .news-pagination {
+      font-size: var(--font-size-sm);
+      color: var(--text-muted);
+    }
+  }
+  
+  // Content section with navigation and news item
+  .news-content {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    
+    .news-navigation {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.4);
+      
+      img {
+        width: 18px;
+        height: 18px;
+        filter: brightness(0) invert(1); // Make icon white
+      }
+      
+      &:hover {
+        opacity: 1;
+        transform: scale(1.1);
+        background-color: var(--primary-color);
+      }
+      
+      &.prev {
+        margin-right: var(--spacing-sm);
+      }
+      
+      &.next {
+        margin-left: var(--spacing-sm);
+      }
+    }
 
       // New container to hold multiple news items
     .news-items-container {
@@ -102,7 +102,6 @@
       flex: 1;
       gap: var(--spacing-sm);
     }
-     
       // News item styling as an image card
       .news-item {
         flex: 1;
