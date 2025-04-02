@@ -11,6 +11,8 @@ const ServerStatus: React.FC<ServerStatusProps> = ({
   pollingInterval = 30000 // Check every 30 seconds by default
 }) => {
   const [isOnline, setIsOnline] = useState<boolean | null>(null);
+  const [lastChecked, setLastChecked] = useState<Date | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Function to check server status
   const checkServerStatus = async () => {
@@ -28,9 +30,11 @@ const ServerStatus: React.FC<ServerStatusProps> = ({
       // In production, replace this with actual server checks
       const mockOnline = Math.random() > 0.3; // 70% chance server is online
       setIsOnline(mockOnline);
+      setLastChecked(new Date());
       log(`Server status checked: ${mockOnline ? 'online' : 'offline'}`);
     } catch (error) {
       setIsOnline(false);
+      setLastChecked(new Date());
       log('Error checking server status:', error);
     }
   };
@@ -47,19 +51,48 @@ const ServerStatus: React.FC<ServerStatusProps> = ({
     return () => clearInterval(intervalId);
   }, [pollingInterval, serverUrl]);
 
-  // Determine status class
+  // Format the last checked time
+  const getLastCheckedText = () => {
+    if (!lastChecked) return 'Never checked';
+    
+    // Format as relative time (e.g., "2 minutes ago")
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - lastChecked.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  };
+
+  // Determine status label and classes
+  let statusLabel = 'Checking...';
   let statusClass = 'checking';
   
   if (isOnline === true) {
+    statusLabel = 'Online';
     statusClass = 'online';
   } else if (isOnline === false) {
+    statusLabel = 'Offline';
     statusClass = 'offline';
   }
 
-  // This component will only enhance what's already there visually
   return (
-    <div className={`server-status-indicator ${statusClass}`} title={isOnline ? 'Server Online' : 'Server Offline'}>
-      <div className="status-dot"></div>
+    <div 
+      className={`server-status ${statusClass}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="status-indicator"></div>
+      <span className="status-text">{statusLabel}</span>
+      
+      {/* Tooltip with additional information */}
+      {isHovered && (
+        <div className="status-tooltip">
+          <p>Server Status: <strong>{statusLabel}</strong></p>
+          <p>Last checked: {getLastCheckedText()}</p>
+          <p className="tooltip-hint">Click to check now</p>
+        </div>
+      )}
     </div>
   );
 };

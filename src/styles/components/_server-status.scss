@@ -1,98 +1,160 @@
 /**
- * Server Status Indicator Styles
+ * Server Status Styles
  * 
- * Styles for a subtle status indicator at the top-left corner.
+ * Styles for the server status indicator component.
  */
 
-@use '../abstracts' as *;
+ @use '../abstracts' as *;
 
-.server-status-indicator {
+.server-status {
   position: absolute;
-  top: 0;
-  left: 50px; // Position it after the "Online" text
+  top: 15px;
+  right: 65px; // Position next to settings button (15px + 40px + 10px gap)
   display: flex;
+  height: 40px;
   align-items: center;
-  height: 200px; // Match the height of the top bar
-  padding: 0 5px;
+  padding: 5px 12px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-pill);
+  cursor: pointer;
   z-index: 5;
-  pointer-events: none; // Makes the element non-interactive
+  transition: all var(--transition-normal);
   
-  // Small status dot
-  .status-dot {
-    width: 6px;
-    height: 6px;
+  // Pulsing effect for status indicator
+  .status-indicator {
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    transition: background-color var(--transition-fast);
+    margin-right: 8px;
+    transition: background-color var(--transition-normal);
+  }
+  
+  .status-text {
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    transition: color var(--transition-normal);
   }
   
   // Status variants
   &.online {
-    .status-dot {
+    .status-indicator {
       background-color: var(--success-color);
       box-shadow: 0 0 5px var(--success-color);
-      animation: pulse-status-success 2s infinite;
+      animation: pulse-success 2s infinite;
+    }
+    
+    .status-text {
+      color: var(--success-color);
     }
   }
   
   &.offline {
-    .status-dot {
+    .status-indicator {
       background-color: var(--danger-color);
       box-shadow: 0 0 5px var(--danger-color);
-      animation: pulse-status-danger 2s infinite;
+      animation: pulse-danger 2s infinite;
+    }
+    
+    .status-text {
+      color: var(--danger-color);
     }
   }
   
   &.checking {
-    .status-dot {
+    .status-indicator {
       background-color: var(--warning-color);
       box-shadow: 0 0 5px var(--warning-color);
-      animation: pulse-status-warning 2s infinite;
+      animation: pulse-warning 2s infinite;
+    }
+    
+    .status-text {
+      color: var(--warning-color);
+    }
+  }
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: translateY(-2px);
+  }
+  
+  // Tooltip with additional information
+  .status-tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 180px;
+    padding: var(--spacing-sm);
+    background: rgba(25, 28, 32, 0.95);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+    pointer-events: none;
+    animation: fade-in 0.3s ease-out;
+    
+    p {
+      margin: var(--spacing-xxs) 0;
+      font-size: var(--font-size-xs);
+      color: var(--text-color);
+      
+      &.tooltip-hint {
+        color: var(--text-muted);
+        font-style: italic;
+        margin-top: var(--spacing-xs);
+        font-size: calc(var(--font-size-xs) - 1px);
+      }
+    }
+    
+    // Arrow pointing to the status indicator
+    &::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      right: 15px;
+      width: 10px;
+      height: 10px;
+      background: rgba(25, 28, 32, 0.95);
+      transform: rotate(45deg);
+      border-left: 1px solid var(--border-color);
+      border-top: 1px solid var(--border-color);
     }
   }
 }
 
-// Subtle pulsing animations
-@keyframes pulse-status-success {
+// Pulsing animations for different status states
+@keyframes pulse-success {
   0% {
-    opacity: 0.7;
-    box-shadow: 0 0 3px var(--success-color);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
   }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 5px var(--success-color);
+  70% {
+    box-shadow: 0 0 0 5px rgba(76, 175, 80, 0);
   }
   100% {
-    opacity: 0.7;
-    box-shadow: 0 0 3px var(--success-color);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
   }
 }
 
-@keyframes pulse-status-danger {
+@keyframes pulse-danger {
   0% {
-    opacity: 0.7;
-    box-shadow: 0 0 3px var(--danger-color);
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4);
   }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 5px var(--danger-color);
+  70% {
+    box-shadow: 0 0 0 5px rgba(244, 67, 54, 0);
   }
   100% {
-    opacity: 0.7;
-    box-shadow: 0 0 3px var(--danger-color);
+    box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
   }
 }
 
-@keyframes pulse-status-warning {
+@keyframes pulse-warning {
   0% {
-    opacity: 0.7;
-    box-shadow: 0 0 3px var(--warning-color);
+    box-shadow: 0 0 0 0 rgba(255, 202, 40, 0.4);
   }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 5px var(--warning-color);
+  70% {
+    box-shadow: 0 0 0 5px rgba(255, 202, 40, 0);
   }
   100% {
-    opacity: 0.7;
-    box-shadow: 0 0 3px var(--warning-color);
+    box-shadow: 0 0 0 0 rgba(255, 202, 40, 0);
   }
 }
