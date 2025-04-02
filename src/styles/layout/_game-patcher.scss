@@ -72,10 +72,10 @@
   // Play button with integrated progress
   .btn-start {
     @include button-primary;
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-pill);
     line-height: 50px;
-    font-weight: 600;
-    font-size: var(--font-size-lg);
+    font-weight: 700;
+    font-size: var(--font-size-xxl);
     min-width: 200px;
     position: absolute;
     top: 2em;

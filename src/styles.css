@@ -889,10 +889,10 @@ body {
   text-align: center;
   background: var(--primary-color);
   color: var(--text-on-primary);
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-pill);
   line-height: 50px;
-  font-weight: 600;
-  font-size: var(--font-size-lg);
+  font-weight: 700;
+  font-size: var(--font-size-xxl);
   min-width: 200px;
   position: absolute;
   top: 2em;
@@ -1829,6 +1829,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: var(--content-width-xl);
+  height: 300px;
   background: rgba(0, 0, 0, 0.7);
   border-radius: var(--border-radius-md);
   margin-bottom: 1rem;

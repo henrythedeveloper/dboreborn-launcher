@@ -10,6 +10,7 @@ export interface Game {
   export interface RemoteConfig {
     launcherVer: number;
     launcherUrl: string;
+    serverStatusUrl?: string;
     games: Game[];
   }
   

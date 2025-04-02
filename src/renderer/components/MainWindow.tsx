@@ -16,6 +16,7 @@ import GamePatcher from "./GamePatcher"; // Updated component
 import SettingsPanel from "./SettingsPanel";
 import NewsSlider from "./NewsSlider";
 import BackToTop from "./BackToTop";
+import ServerStatus from "./ServerStatus";
 import DebugModeHandler from "./DebugModeHandler";
 import { AppContextProvider } from "./AppContext";
 
@@ -30,6 +31,7 @@ const MainWindow: React.FC = () => {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
+  const [serverUrl, setServerUrl] = useState<string>("http://localhost:8002/status");
 
   // Load initial configuration
   useEffect(() => {
@@ -89,6 +91,11 @@ const MainWindow: React.FC = () => {
   
         setConfigRemote(remoteConfig);
         log("Remote config loaded", remoteConfig);
+
+        // Update the server status URL if provided in the config
+        if (remoteConfig.serverStatusUrl) {
+          setServerUrl(remoteConfig.serverStatusUrl);
+        }
 
         // Always use the first game
         if (remoteConfig?.games?.length > 0) {
@@ -192,6 +199,11 @@ const MainWindow: React.FC = () => {
         
         {isInitializing && (
           <InitialSetupScreen />
+        )}
+
+        {/* Server Status Indicator */}
+        {!isInitializing && (
+          <ServerStatus serverUrl={serverUrl} pollingInterval={30000} />
         )}
         
         {/* Settings Panel */}

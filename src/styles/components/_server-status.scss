@@ -1,0 +1,98 @@
+/**
+ * Server Status Indicator Styles
+ * 
+ * Styles for a subtle status indicator at the top-left corner.
+ */
+
+@use '../abstracts' as *;
+
+.server-status-indicator {
+  position: absolute;
+  top: 0;
+  left: 50px; // Position it after the "Online" text
+  display: flex;
+  align-items: center;
+  height: 200px; // Match the height of the top bar
+  padding: 0 5px;
+  z-index: 5;
+  pointer-events: none; // Makes the element non-interactive
+  
+  // Small status dot
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transition: background-color var(--transition-fast);
+  }
+  
+  // Status variants
+  &.online {
+    .status-dot {
+      background-color: var(--success-color);
+      box-shadow: 0 0 5px var(--success-color);
+      animation: pulse-status-success 2s infinite;
+    }
+  }
+  
+  &.offline {
+    .status-dot {
+      background-color: var(--danger-color);
+      box-shadow: 0 0 5px var(--danger-color);
+      animation: pulse-status-danger 2s infinite;
+    }
+  }
+  
+  &.checking {
+    .status-dot {
+      background-color: var(--warning-color);
+      box-shadow: 0 0 5px var(--warning-color);
+      animation: pulse-status-warning 2s infinite;
+    }
+  }
+}
+
+// Subtle pulsing animations
+@keyframes pulse-status-success {
+  0% {
+    opacity: 0.7;
+    box-shadow: 0 0 3px var(--success-color);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 5px var(--success-color);
+  }
+  100% {
+    opacity: 0.7;
+    box-shadow: 0 0 3px var(--success-color);
+  }
+}
+
+@keyframes pulse-status-danger {
+  0% {
+    opacity: 0.7;
+    box-shadow: 0 0 3px var(--danger-color);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 5px var(--danger-color);
+  }
+  100% {
+    opacity: 0.7;
+    box-shadow: 0 0 3px var(--danger-color);
+  }
+}
+
+@keyframes pulse-status-warning {
+  0% {
+    opacity: 0.7;
+    box-shadow: 0 0 3px var(--warning-color);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 5px var(--warning-color);
+  }
+  100% {
+    opacity: 0.7;
+    box-shadow: 0 0 3px var(--warning-color);
+  }
+}
