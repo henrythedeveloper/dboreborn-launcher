@@ -1,82 +1,82 @@
 /**
- * Breakpoints
- * 
- * Define standard breakpoints for responsive design.
- */
+* Breakpoints
+* 
+* Define standard breakpoints for responsive design.
+*/
 
- @use 'sass:map';
+@use 'sass:map';
 
- // Breakpoints map
- $breakpoints: (
-   'xs': 480px,
-   'sm': 640px,
-   'md': 768px,
-   'lg': 1024px,
-   'xl': 1280px,
-   '2xl': 1536px
- );
- 
- /**
-  * Media query mixin for min-width breakpoints
-  * Use: @include screen(md) { ... }
-  */
- @mixin screen($size) {
-   @if map.has-key($breakpoints, $size) {
-     @media (min-width: map.get($breakpoints, $size)) {
-       @content;
-     }
-   } @else {
-     @error "Unknown breakpoint size '#{$size}'. Available sizes are: #{map.keys($breakpoints)}";
-   }
- }
- 
- /**
-  * Media query mixin for max-width breakpoints
-  * Use: @include screen-max(md) { ... }
-  */
- @mixin screen-max($size) {
-   @if map.has-key($breakpoints, $size) {
-     $value: map.get($breakpoints, $size) - 1px;
-     @media (max-width: $value) {
-       @content;
-     }
-   } @else {
-     @error "Unknown breakpoint size '#{$size}'. Available sizes are: #{map.keys($breakpoints)}";
-   }
- }
- 
- /**
-  * Media query mixin for range between two breakpoints
-  * Use: @include screen-between(sm, lg) { ... }
-  */
- @mixin screen-between($min, $max) {
-   @if map.has-key($breakpoints, $min) and map.has-key($breakpoints, $max) {
-     $min-value: map.get($breakpoints, $min);
-     $max-value: map.get($breakpoints, $max) - 1px;
-     @media (min-width: $min-value) and (max-width: $max-value) {
-       @content;
-     }
-   } @else {
-     @error "Unknown breakpoint sizes. Available sizes are: #{map.keys($breakpoints)}";
-   }
- }
- 
- /**
-  * Media query for dark mode
-  * Use: @include dark-mode { ... }
-  */
- @mixin dark-mode {
-   @media (prefers-color-scheme: dark) {
-     @content;
-   }
- }
- 
- /**
-  * Media query for reduced motion preference
-  * Use: @include reduced-motion { ... }
-  */
- @mixin reduced-motion {
-   @media (prefers-reduced-motion: reduce) {
-     @content;
-   }
- }
+// Breakpoints map
+$breakpoints: (
+  'xs': 480px,
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px
+);
+
+/**
+* Media query mixin for min-width breakpoints
+* Use: @include screen(md) { ... }
+*/
+@mixin screen($size) {
+  @if map.has-key($breakpoints, $size) {
+    @media (min-width: map.get($breakpoints, $size)) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint size '#{$size}'. Available sizes are: #{map.keys($breakpoints)}";
+  }
+}
+
+/**
+* Media query mixin for max-width breakpoints
+* Use: @include screen-max(md) { ... }
+*/
+@mixin screen-max($size) {
+  @if map.has-key($breakpoints, $size) {
+    $value: map.get($breakpoints, $size) - 1px;
+    @media (max-width: $value) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint size '#{$size}'. Available sizes are: #{map.keys($breakpoints)}";
+  }
+}
+
+/**
+* Media query mixin for range between two breakpoints
+* Use: @include screen-between(sm, lg) { ... }
+*/
+@mixin screen-between($min, $max) {
+  @if map.has-key($breakpoints, $min) and map.has-key($breakpoints, $max) {
+    $min-value: map.get($breakpoints, $min);
+    $max-value: map.get($breakpoints, $max) - 1px;
+    @media (min-width: $min-value) and (max-width: $max-value) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint sizes. Available sizes are: #{map.keys($breakpoints)}";
+  }
+}
+
+/**
+* Media query for dark mode
+* Use: @include dark-mode { ... }
+*/
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+/**
+* Media query for reduced motion preference
+* Use: @include reduced-motion { ... }
+*/
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

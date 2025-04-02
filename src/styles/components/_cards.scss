@@ -1,201 +1,201 @@
 /**
- * Card Styles
- * 
- * Styles for card components using the card mixin.
- */
+* Card Styles
+* 
+* Styles for card components using the card mixin.
+*/
 
- @use '../abstracts/mixins' as m;
+@use '../abstracts/mixins' as m;
 
- // Base card
- .card {
-   @include m.card;
-   margin-bottom: var(--spacing-md);
-   
-   // Card with hover effect
-   &.interactive {
-     @include m.interactive;
-   }
-   
-   // Card header
-   &-header {
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-     padding-bottom: var(--spacing-sm);
-     margin-bottom: var(--spacing-sm);
-     border-bottom: 1px solid var(--border-color);
-     
-     h3 {
-       margin: 0;
-       font-size: var(--font-size-lg);
-       color: var(--text-color);
-     }
-   }
-   
-   // Card content
-   &-content {
-     color: var(--text-color);
-     
-     p:last-child {
-       margin-bottom: 0;
-     }
-   }
-   
-   // Card footer
-   &-footer {
-     display: flex;
-     align-items: center;
-     justify-content: flex-end;
-     padding-top: var(--spacing-sm);
-     margin-top: var(--spacing-sm);
-     border-top: 1px solid var(--border-color);
-     
-     button + button {
-       margin-left: var(--spacing-xs);
-     }
-   }
-   
-   // Card variants
-   &-primary {
-     border-top: 3px solid var(--primary-color);
-   }
-   
-   &-secondary {
-     border-top: 3px solid var(--secondary-color);
-   }
-   
-   &-success {
-     border-top: 3px solid var(--success-color);
-   }
-   
-   &-warning {
-     border-top: 3px solid var(--warning-color);
-   }
-   
-   &-danger {
-     border-top: 3px solid var(--danger-color);
-   }
-   
-   // Card with gradient
-   &-gradient {
-     background: linear-gradient(135deg, 
-                  rgba(var(--card-bg), 1) 0%, 
-                  rgba(var(--card-bg), 0.8) 100%);
-     
-     &-primary {
-       background: linear-gradient(135deg, 
-                    var(--card-bg) 0%, 
-                    rgba(var(--primary-color), 0.1) 100%);
-     }
-   }
-   
-   // Card sizes
-   &-sm {
-     padding: var(--spacing-sm);
-   }
-   
-   &-lg {
-     padding: var(--spacing-lg);
-   }
-   
-   // Card with image
-   &-with-image {
-     padding: 0;
-     overflow: hidden;
-     
-     .card-image {
-       width: 100%;
-       height: 200px;
-       object-fit: cover;
-     }
-     
-     .card-body {
-       padding: var(--spacing-md);
-     }
-   }
-   
-   // Game info card specific to launcher
-   &-game-info {
-     background: rgba(0, 0, 0, 0.7);
-     border: 1px solid var(--border-color);
-     border-radius: var(--border-radius-md);
-     padding: var(--spacing-md);
-     margin-bottom: var(--spacing-md);
-     
-     .info-row {
-       display: flex;
-       justify-content: space-between;
-       margin-bottom: var(--spacing-xs);
-       
-       .label {
-         color: var(--text-muted);
-       }
-       
-       .value {
-         color: var(--primary-color);
-         font-weight: 500;
-       }
-     }
-   }
-   
-   // Notification card
-   &-notification {
-     display: flex;
-     align-items: flex-start;
-     padding: var(--spacing-sm);
-     border-left: 4px solid var(--primary-color);
-     background: rgba(var(--card-bg), 0.95);
-     margin-bottom: var(--spacing-sm);
-     box-shadow: var(--shadow-md);
-     
-     .notification-icon {
-       margin-right: var(--spacing-sm);
-       color: var(--primary-color);
-     }
-     
-     .notification-content {
-       flex: 1;
-       
-       .notification-title {
-         font-weight: 600;
-         margin-bottom: var(--spacing-xxs);
-       }
-       
-       .notification-message {
-         font-size: var(--font-size-sm);
-         color: var(--text-muted);
-       }
-     }
-     
-     .notification-close {
-       cursor: pointer;
-       opacity: 0.5;
-       transition: opacity var(--transition-fast);
-       
-       &:hover {
-         opacity: 1;
-       }
-     }
-     
-     // Notification variants
-     &.info {
-       border-left-color: var(--primary-color);
-       .notification-icon { color: var(--primary-color); }
-     }
-     
-     &.success {
-       border-left-color: var(--success-color);
-       .notification-icon { color: var(--success-color); }
-     }
-     
-     &.warning {
-       border-left-color: var(--warning-color);
-       .notification-icon { color: var(--warning-color); }
-     }
-     
-     &.error {
-       border-left-color: var(--danger-color);
-       .notification-icon { color: var(--danger-color); }
-     }
-   }
- }
+// Base card
+.card {
+  @include m.card;
+  margin-bottom: var(--spacing-md);
+  
+  // Card with hover effect
+  &.interactive {
+    @include m.interactive;
+  }
+  
+  // Card header
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    
+    h3 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      color: var(--text-color);
+    }
+  }
+  
+  // Card content
+  &-content {
+    color: var(--text-color);
+    
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  // Card footer
+  &-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+    
+    button + button {
+      margin-left: var(--spacing-xs);
+    }
+  }
+  
+  // Card variants
+  &-primary {
+    border-top: 3px solid var(--primary-color);
+  }
+  
+  &-secondary {
+    border-top: 3px solid var(--secondary-color);
+  }
+  
+  &-success {
+    border-top: 3px solid var(--success-color);
+  }
+  
+  &-warning {
+    border-top: 3px solid var(--warning-color);
+  }
+  
+  &-danger {
+    border-top: 3px solid var(--danger-color);
+  }
+  
+  // Card with gradient
+  &-gradient {
+    background: linear-gradient(135deg, 
+                rgba(var(--card-bg), 1) 0%, 
+                rgba(var(--card-bg), 0.8) 100%);
+    
+    &-primary {
+      background: linear-gradient(135deg, 
+                  var(--card-bg) 0%, 
+                  rgba(var(--primary-color), 0.1) 100%);
+    }
+  }
+  
+  // Card sizes
+  &-sm {
+    padding: var(--spacing-sm);
+  }
+  
+  &-lg {
+    padding: var(--spacing-lg);
+  }
+  
+  // Card with image
+  &-with-image {
+    padding: 0;
+    overflow: hidden;
+    
+    .card-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .card-body {
+      padding: var(--spacing-md);
+    }
+  }
+  
+  // Game info card specific to launcher
+  &-game-info {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xs);
+      
+      .label {
+        color: var(--text-muted);
+      }
+      
+      .value {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+    }
+  }
+  
+  // Notification card
+  &-notification {
+    display: flex;
+    align-items: flex-start;
+    padding: var(--spacing-sm);
+    border-left: 4px solid var(--primary-color);
+    background: rgba(var(--card-bg), 0.95);
+    margin-bottom: var(--spacing-sm);
+    box-shadow: var(--shadow-md);
+    
+    .notification-icon {
+      margin-right: var(--spacing-sm);
+      color: var(--primary-color);
+    }
+    
+    .notification-content {
+      flex: 1;
+      
+      .notification-title {
+        font-weight: 600;
+        margin-bottom: var(--spacing-xxs);
+      }
+      
+      .notification-message {
+        font-size: var(--font-size-sm);
+        color: var(--text-muted);
+      }
+    }
+    
+    .notification-close {
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity var(--transition-fast);
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
+    
+    // Notification variants
+    &.info {
+      border-left-color: var(--primary-color);
+      .notification-icon { color: var(--primary-color); }
+    }
+    
+    &.success {
+      border-left-color: var(--success-color);
+      .notification-icon { color: var(--success-color); }
+    }
+    
+    &.warning {
+      border-left-color: var(--warning-color);
+      .notification-icon { color: var(--warning-color); }
+    }
+    
+    &.error {
+      border-left-color: var(--danger-color);
+      .notification-icon { color: var(--danger-color); }
+    }
+  }
+}

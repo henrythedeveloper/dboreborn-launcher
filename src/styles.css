@@ -91,101 +91,101 @@
 }
 
 /**
- * Global Mixins
- * 
- * Reusable mixins to standardize common patterns and reduce code duplication.
- */
+* Global Mixins
+* 
+* Reusable mixins to standardize common patterns and reduce code duplication.
+*/
 /**
- * Breakpoints
- * 
- * Define standard breakpoints for responsive design.
- */
+* Breakpoints
+* 
+* Define standard breakpoints for responsive design.
+*/
 /**
- * Media query mixin for min-width breakpoints
- * Use: @include screen(md) { ... }
- */
+* Media query mixin for min-width breakpoints
+* Use: @include screen(md) { ... }
+*/
 /**
- * Media query mixin for max-width breakpoints
- * Use: @include screen-max(md) { ... }
- */
+* Media query mixin for max-width breakpoints
+* Use: @include screen-max(md) { ... }
+*/
 /**
- * Media query mixin for range between two breakpoints
- * Use: @include screen-between(sm, lg) { ... }
- */
+* Media query mixin for range between two breakpoints
+* Use: @include screen-between(sm, lg) { ... }
+*/
 /**
- * Media query for dark mode
- * Use: @include dark-mode { ... }
- */
+* Media query for dark mode
+* Use: @include dark-mode { ... }
+*/
 /**
- * Media query for reduced motion preference
- * Use: @include reduced-motion { ... }
- */
+* Media query for reduced motion preference
+* Use: @include reduced-motion { ... }
+*/
 /**
- * Flex center
- * Centers content using flexbox
- */
+* Flex center
+* Centers content using flexbox
+*/
 /**
- * Flex column
- * Vertical arrangement with flexbox
- */
+* Flex column
+* Vertical arrangement with flexbox
+*/
 /**
- * Grid auto-fit
- * Responsive grid layout with auto-fit
- */
+* Grid auto-fit
+* Responsive grid layout with auto-fit
+*/
 /**
- * Truncate text
- * Cut text with ellipsis
- */
+* Truncate text
+* Cut text with ellipsis
+*/
 /**
- * Interactive element
- * Consistent hover/focus behavior
- */
+* Interactive element
+* Consistent hover/focus behavior
+*/
 /**
- * Card styles
- * Consistent card appearance
- */
+* Card styles
+* Consistent card appearance
+*/
 /**
- * Button base styles
- * Consistent button appearance
- */
+* Button base styles
+* Consistent button appearance
+*/
 /**
- * Primary button
- * Main call-to-action style
- */
+* Primary button
+* Main call-to-action style
+*/
 /**
- * Secondary button
- * Alternative button style
- */
+* Secondary button
+* Alternative button style
+*/
 /**
- * Loading skeleton
- * Consistent loading state appearance
- */
+* Loading skeleton
+* Consistent loading state appearance
+*/
 /**
- * Custom scrollbar
- * Consistent scrollbar styling
- */
+* Custom scrollbar
+* Consistent scrollbar styling
+*/
 /**
- * Absolute center
- * Center element absolutely within container
- */
+* Absolute center
+* Center element absolutely within container
+*/
 /**
- * Glass effect
- * Create a frosted glass effect
- */
+* Glass effect
+* Create a frosted glass effect
+*/
 /**
- * Overlay
- * Create a dark overlay
- */
+* Overlay
+* Create a dark overlay
+*/
 /**
- * Global Mixins
- * 
- * Reusable mixins to standardize common patterns and reduce code duplication.
- */
+* Global Mixins
+* 
+* Reusable mixins to standardize common patterns and reduce code duplication.
+*/
 /**
- * SCSS Functions
- * 
- * Utility functions for calculations and transformations.
- */
+* SCSS Functions
+* 
+* Utility functions for calculations and transformations.
+*/
 /**
  * Base Styles Index
  * 
@@ -294,10 +294,10 @@ button {
   }
 }
 /**
- * Global Mixins
- * 
- * Reusable mixins to standardize common patterns and reduce code duplication.
- */
+* Global Mixins
+* 
+* Reusable mixins to standardize common patterns and reduce code duplication.
+*/
 /**
  * Typography Styles
  *
@@ -459,18 +459,18 @@ ul li:last-child, ol li:last-child {
 }
 
 /**
- * Global Mixins
- * 
- * Reusable mixins to standardize common patterns and reduce code duplication.
- */
+* Global Mixins
+* 
+* Reusable mixins to standardize common patterns and reduce code duplication.
+*/
 /**
- * Animation System
- * 
- * Define reusable animations and provide animation utilities.
- */
+* Animation System
+* 
+* Define reusable animations and provide animation utilities.
+*/
 /**
- * Core animations
- */
+* Core animations
+*/
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -590,11 +590,11 @@ ul li:last-child, ol li:last-child {
   }
 }
 /**
- * Animation Mixins
- */
+* Animation Mixins
+*/
 /**
- * Animation Utility Classes
- */
+* Animation Utility Classes
+*/
 .animate-fade-in {
   animation: fade-in 0.3s ease-out 0s forwards;
 }
@@ -630,8 +630,8 @@ ul li:last-child, ol li:last-child {
 }
 
 /**
- * Animation Timing Classes
- */
+* Animation Timing Classes
+*/
 .animation-delay-100 {
   animation-delay: 100ms;
 }
@@ -658,8 +658,8 @@ ul li:last-child, ol li:last-child {
 }
 
 /**
- * Accessibility - Reduce motion
- */
+* Accessibility - Reduce motion
+*/
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -698,17 +698,6 @@ body {
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--bg-color);
-}
-.container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
 }
 .container.active {
   display: block;
@@ -983,10 +972,10 @@ body {
   }
 }
 /**
- * Additional Content Styles
- * 
- * Styles for the scrollable content section below the main viewport.
- */
+* Additional Content Styles
+* 
+* Styles for the scrollable content section below the main viewport.
+*/
 .additional-content {
   padding: var(--spacing-xl) var(--spacing-lg);
   max-width: 1200px;
@@ -1096,10 +1085,10 @@ body {
  * Forwards all component modules.
  */
 /**
- * Button Styles
- * 
- * Styles for various button types using mixins from abstracts.
- */
+* Button Styles
+* 
+* Styles for various button types using mixins from abstracts.
+*/
 .btn {
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--border-radius-sm);
@@ -1329,10 +1318,10 @@ body {
 }
 
 /**
- * Card Styles
- * 
- * Styles for card components using the card mixin.
- */
+* Card Styles
+* 
+* Styles for card components using the card mixin.
+*/
 .card {
   background: var(--card-bg);
   border-radius: var(--border-radius-md);
@@ -1506,10 +1495,10 @@ body {
 }
 
 /**
- * Settings Panel Styles
- * 
- * Comprehensive styles for the modular settings panel with tabs and enhanced UI elements.
- */
+* Settings Panel Styles
+* 
+* Comprehensive styles for the modular settings panel with tabs and enhanced UI elements.
+*/
 .settings-icon {
   position: absolute;
   top: 15px;

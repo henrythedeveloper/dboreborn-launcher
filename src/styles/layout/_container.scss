@@ -7,43 +7,24 @@
  @use '../abstracts' as *;
  @use '../base/animations' as *;
 
- body {
-   margin: 0;
-   padding: 0;
-   font-family: var(--font-family);
-   background-color: var(--bg-color);
-   color: var(--text-color);
-   overflow: hidden; // Keep body non-scrollable to avoid double scrollbars
-   line-height: var(--line-height-body);
- }
- 
- .container {
-   position: relative;
-   width: 100vw;
-   height: 100vh;
-   overflow-y: auto; // Enable vertical scrolling
-   overflow-x: hidden; // Prevent horizontal scrolling
-   scrollbar-width: thin; // Firefox
-   scrollbar-color: var(--primary-color) var(--bg-color); // Firefox
-   
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow: hidden; // Keep body non-scrollable to avoid double scrollbars
+  line-height: var(--line-height-body);
+}
 
-       // Add a subtle gradient overlay
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background: linear-gradient(
-        to left,
-        rgba(0, 0, 0, 0.6) 0%,
-        rgba(0, 0, 0, 0.3) 40%,
-        rgba(0, 0, 0, 0.7) 100%
-        );
-        pointer-events: none;
-    }
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto; // Enable vertical scrolling
+  overflow-x: hidden; // Prevent horizontal scrolling
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: var(--primary-color) var(--bg-color); // Firefox
 
     // Active state
     &.active {
@@ -51,162 +32,162 @@
         @include fade-in(0.5s);
     }
 
-   // Custom scrollbar for Chrome/Edge/Safari
-   &::-webkit-scrollbar {
-     width: 8px;
-   }
-   
-   &::-webkit-scrollbar-track {
-     background: rgba(0, 0, 0, 0.2);
-     border-radius: 10px;
-   }
-   
-   &::-webkit-scrollbar-thumb {
-     background: var(--primary-color);
-     border-radius: 10px;
-     
-     &:hover {
-       background: var(--primary-color-hover);
-     }
-   }
- 
-   // Loading/Initial setup screen - fixed to stay in view while scrolling
-   .initial-setup {
-     width: 100%;
-     height: 100vh;
-     background-color: var(--bg-color);
-     z-index: 10;
-     position: fixed; // Changed from absolute to fixed
-     left: 0;
-     top: 0;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     
-     // Add an orange gradient overlay
-     &::before {
-       content: '';
-       position: absolute;
-       top: 0;
-       left: 0;
-       width: 100%;
-       height: 100%;
-       background: radial-gradient(
-         circle at center,
-         rgba(255, 138, 0, 0.05) 0%,
-         rgba(0, 0, 0, 0) 70%
-       );
-       pointer-events: none;
-     }
- 
-     &-text {
-       color: var(--text-color);
-       display: flex;
-       flex-direction: column;
-       justify-content: center;
-       align-items: center;
-       gap: var(--spacing-md);
-       font-size: var(--font-size-lg);
-       letter-spacing: 0.5px;
-       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-       
-       // Orange accent for loading text
-       span {
-         color: var(--primary-color);
-         font-weight: 600;
-       }
- 
-       &::before {
-         content: "";
-         background: url("@assets/bouncing-ball.svg");
-         width: 32px;
-         height: 32px;
-         display: inline-block;
-         filter: invert(1);
-         
-         // Add orange tint to the spinner
-         filter: invert(60%) sepia(94%) saturate(1352%) hue-rotate(360deg) brightness(101%) contrast(105%);
-         
-         // Add pulsing animation to the spinner
-         @include pulse;
-       }
-     }
-     
-     // Fade out animation when complete
-     &.fade-out {
-       @include fade-out(0.5s);
-       pointer-events: none;
-     }
-   }
- 
-   // Main game container - make it at least full viewport height
-   .game-container {
-     position: relative; // Changed from absolute
-     width: 100%;
-     min-height: 100vh; // Minimum height of viewport
-     background-color: var(--bg-color);
-     overflow: hidden;
-     
-   }
-   
-   // Container section for additional content below the viewport
-   .additional-content {
-     position: relative;
-     width: 100%;
-     padding: var(--spacing-xl) var(--spacing-md);
-     
-     // Add a subtle separator
-     &::before {
-       content: '';
-       position: absolute;
-       top: 0;
-       left: 50%;
-       transform: translateX(-50%);
-       width: 80%;
-       height: 1px;
-       background: linear-gradient(
-         to right,
-         rgba(255, 255, 255, 0) 0%,
-         rgba(255, 255, 255, 0.1) 50%,
-         rgba(255, 255, 255, 0) 100%
-       );
-     }
-   }
- }
- 
- // App utilities
- .hidden {
-   display: none !important;
- }
- 
- .visually-hidden {
-   position: absolute;
-   width: 1px;
-   height: 1px;
-   margin: -1px;
-   padding: 0;
-   overflow: hidden;
-   clip: rect(0, 0, 0, 0);
-   white-space: nowrap;
-   border-width: 0;
- }
- 
- // Overlay utilities
- .overlay {
-   position: fixed; // Changed from absolute to fixed for scrolling
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background-color: rgba(0, 0, 0, 0.7);
-   z-index: 9;
-   
-   &.fade-in {
-     @include fade-in(0.3s);
-   }
-   
-   &.fade-out {
-     @include fade-out(0.3s);
-     pointer-events: none;
-   }
- }
+  // Custom scrollbar for Chrome/Edge/Safari
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+    
+    &:hover {
+      background: var(--primary-color-hover);
+    }
+  }
+
+  // Loading/Initial setup screen - fixed to stay in view while scrolling
+  .initial-setup {
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-color);
+    z-index: 10;
+    position: fixed; // Changed from absolute to fixed
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    // Add an orange gradient overlay
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle at center,
+        rgba(255, 138, 0, 0.05) 0%,
+        rgba(0, 0, 0, 0) 70%
+      );
+      pointer-events: none;
+    }
+
+    &-text {
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: var(--spacing-md);
+      font-size: var(--font-size-lg);
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      
+      // Orange accent for loading text
+      span {
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      &::before {
+        content: "";
+        background: url("@assets/bouncing-ball.svg");
+        width: 32px;
+        height: 32px;
+        display: inline-block;
+        filter: invert(1);
+        
+        // Add orange tint to the spinner
+        filter: invert(60%) sepia(94%) saturate(1352%) hue-rotate(360deg) brightness(101%) contrast(105%);
+        
+        // Add pulsing animation to the spinner
+        @include pulse;
+      }
+    }
+    
+    // Fade out animation when complete
+    &.fade-out {
+      @include fade-out(0.5s);
+      pointer-events: none;
+    }
+  }
+
+  // Main game container - make it at least full viewport height
+  .game-container {
+    position: relative; // Changed from absolute
+    width: 100%;
+    min-height: 100vh; // Minimum height of viewport
+    background-color: var(--bg-color);
+    overflow: hidden;
+    
+  }
+  
+  // Container section for additional content below the viewport
+  .additional-content {
+    position: relative;
+    width: 100%;
+    padding: var(--spacing-xl) var(--spacing-md);
+    
+    // Add a subtle separator
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+  }
+}
+
+// App utilities
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// Overlay utilities
+.overlay {
+  position: fixed; // Changed from absolute to fixed for scrolling
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9;
+  
+  &.fade-in {
+    @include fade-in(0.3s);
+  }
+  
+  &.fade-out {
+    @include fade-out(0.3s);
+    pointer-events: none;
+  }
+}
