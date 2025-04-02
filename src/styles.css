@@ -836,10 +836,10 @@ body {
 }
 
 /**
- * Game Patcher Styles
- * 
- * Styles for the game patcher interface and elements.
- */
+* Game Patcher Styles
+* 
+* Styles for the game patcher interface and elements.
+*/
 .game-patcher {
   width: 100%;
   height: 100%;
@@ -865,44 +865,6 @@ body {
   height: auto;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
 }
-.game-patcher .total-progress {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--border-radius-md);
-  height: 18px;
-  display: flex;
-  position: absolute;
-  bottom: 50px;
-  left: 40px;
-  width: 60%;
-  overflow: hidden;
-  z-index: 2;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.game-patcher .total-progress .total-mid {
-  height: 100%;
-  width: 100%;
-  display: flex;
-}
-.game-patcher .total-progress .total-mid .total-bar {
-  background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color-hover) 100%);
-  border-radius: var(--border-radius-md);
-  height: 100%;
-  width: 0%;
-  transition: width 0.3s ease-out;
-  position: relative;
-  overflow: hidden;
-}
-.game-patcher .total-progress .total-mid .total-bar::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
-  animation: shine 2s infinite;
-}
 .game-patcher .text {
   display: block;
   color: var(--text-color);
@@ -921,31 +883,92 @@ body {
   font-weight: 500;
   color: var(--primary-color);
 }
-.game-patcher .txt-progress {
-  bottom: 100px;
-  left: 40px;
-  font-size: var(--font-size-md);
-}
-.game-patcher .txt-download-speed {
-  bottom: 28px;
-  left: 40px;
+.game-patcher .txt-download-info {
+  top: 6em;
+  left: 3em;
   font-size: var(--font-size-sm);
-  opacity: 0.8;
-}
-.game-patcher .txt-time-remaining {
-  text-align: right;
-  bottom: 78px;
-  left: 40px;
-  font-size: var(--font-size-sm);
-  width: 60%;
   opacity: 0.8;
 }
 .game-patcher .btn-start {
-  z-index: 2;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: none;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: center;
+  background: var(--primary-color);
+  color: var(--text-on-primary);
+  border-radius: var(--border-radius-md);
+  line-height: 50px;
+  font-weight: 600;
+  font-size: var(--font-size-lg);
+  min-width: 200px;
   position: absolute;
   top: 2em;
   left: 3em;
-  width: 25%;
+  z-index: 2;
+}
+.game-patcher .btn-start:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.game-patcher .btn-start:hover:not(:disabled) {
+  background: var(--primary-color-hover);
+  transform: translateY(-1px);
+}
+.game-patcher .btn-start:active:not(:disabled) {
+  transform: translateY(0);
+}
+.game-patcher .btn-start::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  border-radius: var(--border-radius-md);
+}
+.game-patcher .btn-start:hover:not(:disabled):not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.game-patcher .btn-start:active:not(:disabled):not(.disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.game-patcher .btn-start:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+.game-patcher .btn-start.updating {
+  background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color-hover) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.game-patcher .btn-start.updating::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+  animation: shine 2s infinite;
+}
+.game-patcher .btn-start.disabled {
+  background-color: var(--secondary-color);
+  color: var(--text-on-secondary);
+  opacity: 0.7;
+  cursor: not-allowed;
+  z-index: 1;
+}
+.game-patcher .btn-start.disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
 .game-patcher .btn-start.ready {
   animation: pulse 2s infinite;

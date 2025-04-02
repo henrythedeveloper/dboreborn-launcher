@@ -12,7 +12,7 @@ import { log } from "../utils/debug";
 
 // Import modularized components
 import InitialSetupScreen from "./InitialSetupScreen";
-import GamePatcher from "./GamePatcher";
+import GamePatcher from "./GamePatcher"; // Updated component
 import SettingsPanel from "./SettingsPanel";
 import NewsSlider from "./NewsSlider";
 import BackToTop from "./BackToTop";
@@ -205,23 +205,26 @@ const MainWindow: React.FC = () => {
         {/* Main Game Container */}
         {gameInfo && (
           <div className="game-container">
+            {/* Updated GamePatcher with integrated button progress */}
             <GamePatcher 
               game={gameInfo}
               isUpdating={isUpdating}
             />
 
-            {/* News Slider Component - Added here */}
+            {/* News Slider Component */}
             {!isInitializing && (
               <NewsSlider game={gameInfo} />
             )}
           </div>
         )}
+        
         {/* Additional scrollable content below the fold */}
         {!isInitializing && gameInfo && (
           <div className="additional-content">
             <h2>Additional Content</h2>
             <p>Scroll down to see more launcher content and features.</p>
-          {/* Placeholder for future components */}
+            
+            {/* Placeholder for future components */}
             <div className="placeholder-section">
                 <h3>Coming Soon: Server Status</h3>
                 <p>This area will show real-time information about game servers, including player counts, server health, and maintenance schedules.</p>
@@ -250,6 +253,7 @@ const MainWindow: React.FC = () => {
             </div>
           </div>
         )}
+        
         {/* Back to top button */}
         <BackToTop />
       </div>
