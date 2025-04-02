@@ -26,6 +26,31 @@
    scrollbar-width: thin; // Firefox
    scrollbar-color: var(--primary-color) var(--bg-color); // Firefox
    
+
+       // Add a subtle gradient overlay
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.3) 40%,
+        rgba(0, 0, 0, 0.7) 100%
+        );
+        pointer-events: none;
+    }
+
+    // Active state
+    &.active {
+        display: block;
+        @include fade-in(0.5s);
+    }
+
    // Custom scrollbar for Chrome/Edge/Safari
    &::-webkit-scrollbar {
      width: 8px;
@@ -121,6 +146,7 @@
      min-height: 100vh; // Minimum height of viewport
      background-color: var(--bg-color);
      overflow: hidden;
+     
    }
    
    // Container section for additional content below the viewport

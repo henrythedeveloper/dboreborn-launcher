@@ -106,7 +106,11 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ game }) => {
     );
   }
   
-  const currentNews = news[currentIndex];
+  const itemsToShow = [
+    news[currentIndex],
+    news[(currentIndex + 1) % news.length],
+    news[(currentIndex + 2) % news.length]
+  ];
   
   return (
     <div 
@@ -126,19 +130,25 @@ const NewsSlider: React.FC<NewsSliderProps> = ({ game }) => {
           <img src={leftArrowIcon} alt="Previous" />
         </div>
         
-        <div 
-          className={`news-item ${isHovered ? 'hovered' : ''}`} 
-          onClick={() => handleNewsClick(currentNews)}
-        >
-          <div className="news-item-image">
-            <img src={currentNews.imageUrl} alt={currentNews.title} />
-            <div className="news-item-overlay">
-              <span className="news-item-type">{currentNews.type === 'patch' ? 'PATCH' : 'NEWS'}</span>
-              <h4 className="news-item-title">{currentNews.title}</h4>
-              <span className="news-item-date">{currentNews.date}</span>
+        <div className="news-items-container">
+          {itemsToShow.map((item,index) => (
+            <div
+              key={item.id}
+              className={`news-item ${isHovered ? 'hovered' : ''}`} 
+              onClick={() => handleNewsClick(item)}
+            >
+            <div className="news-item-image">
+              <img src={item.imageUrl} alt={item.title} />
+              <div className="news-item-overlay">
+                <span className="news-item-type">{item.type === 'patch' ? 'PATCH' : 'NEWS'}</span>
+                <h4 className="news-item-title">{item.title}</h4>
+                <span className="news-item-date">{item.date}</span>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
+      </div>
+
         
         <div className="news-navigation next" onClick={goToNext}>
           <img src={rightArrowIcon} alt="Next" />

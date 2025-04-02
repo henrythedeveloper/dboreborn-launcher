@@ -48,7 +48,7 @@
   --text-muted: #a0a0a0;
   --text-on-primary: #1a1a1a;
   --text-on-secondary: #ffffff;
-  --bg-color: #1a1d20;
+  --bg-color: #201e1a;
   --card-bg: #222529;
   --input-bg: #2d3035;
   --tag-bg: #343840;
@@ -699,6 +699,21 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--bg-color);
 }
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 100%);
+  pointer-events: none;
+}
+.container.active {
+  display: block;
+  animation: fade-in 0.5s ease-out 0s forwards;
+}
 .container::-webkit-scrollbar {
   width: 8px;
 }
@@ -838,16 +853,6 @@ body {
 .game-patcher.dbo {
   background-image: url("@assets/bg-dbo.svg");
 }
-.game-patcher::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
-}
 .game-patcher.active {
   display: block;
   animation: fade-in 0.5s ease-out 0s forwards;
@@ -871,6 +876,7 @@ body {
   left: 40px;
   width: 60%;
   overflow: hidden;
+  z-index: 2;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .game-patcher .total-progress .total-mid {
@@ -905,6 +911,7 @@ body {
   position: absolute;
   text-align: left;
   pointer-events: none;
+  z-index: 2;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .game-patcher .txt-status {
@@ -934,9 +941,10 @@ body {
   opacity: 0.8;
 }
 .game-patcher .btn-start {
+  z-index: 2;
   position: absolute;
-  bottom: 50px;
-  right: 40px;
+  top: 2em;
+  left: 3em;
   width: 25%;
 }
 .game-patcher .btn-start.ready {
@@ -1805,11 +1813,13 @@ body {
  */
 .news-slider {
   position: absolute;
-  bottom: 150px;
-  left: 40px;
-  width: 450px;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--content-width-xl);
   background: rgba(0, 0, 0, 0.7);
   border-radius: var(--border-radius-md);
+  margin-bottom: 1rem;
   padding: var(--spacing-md);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
@@ -1877,12 +1887,19 @@ body {
 .news-slider .news-content .news-navigation.next {
   margin-left: var(--spacing-sm);
 }
+.news-slider .news-content .news-items-container {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  gap: var(--spacing-sm);
+}
 .news-slider .news-content .news-item {
   flex: 1;
   border-radius: var(--border-radius-sm);
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  animation: fade-in 0.5s ease-out;
   animation: fade-in 0.5s ease-out;
 }
 .news-slider .news-content .news-item.hovered .news-item-image:after {
