@@ -1,12 +1,13 @@
 /**
  * Settings Panel Styles
  * 
- * Specific styles for the settings panel component.
+ * Comprehensive styles for the modular settings panel with tabs and enhanced UI elements.
  */
 
  @use '../abstracts' as *;
  @use '../base/animations' as a;
-
+ 
+ // Settings icon in the top right
  .settings-icon {
    position: absolute;
    top: 15px;
@@ -23,64 +24,45 @@
    transition: background-color var(--transition-normal), transform var(--transition-normal);
    border: 1px solid rgba(255, 138, 0, 0.3);
  
+   // Style the image directly
+   .gear-image {
+     width: 22px;
+     height: 22px;
+     filter: brightness(0) invert(1); // Make the icon white
+     transition: filter var(--transition-normal), transform var(--transition-normal);
+     animation: gear-spin 10s linear infinite;
+     animation-play-state: paused;
+   }
+ 
    &:hover {
      background-color: rgba(0, 0, 0, 0.8);
      transform: rotate(15deg);
      border-color: var(--primary-color);
+     box-shadow: 0 0 5px var(--primary-color);
+     
+     .gear-image {
+       animation-play-state: running;
+       filter: brightness(0) invert(0.8) sepia(0.8) saturate(5) hue-rotate(5deg);
+     }
    }
  
    &:active {
      transform: rotate(30deg);
    }
- 
-   .gear-icon {
-     position: relative;
-     width: 20px;
-     height: 20px;
-     
-     &:before {
-       content: "";
-       position: absolute;
-       width: 20px;
-       height: 20px;
-       background-color: white;
-       border-radius: 50%;
-       left: 0;
-       top: 0;
-     }
-     
-     &:after {
-       content: "";
-       position: absolute;
-       width: 10px;
-       height: 10px;
-       background-color: white;
-       border-radius: 50%;
-       border: 2px solid rgba(0, 0, 0, 0.6);
-       left: 4px;
-       top: 4px;
-     }
-     
-     // Gear teeth
-     box-shadow: 
-       0px -5px 0 0 white,
-       0px 5px 0 0 white,
-       5px 0px 0 0 white,
-       -5px 0px 0 0 white,
-       3.5px 3.5px 0 0 white,
-       3.5px -3.5px 0 0 white,
-       -3.5px 3.5px 0 0 white,
-       -3.5px -3.5px 0 0 white;
-     
-     opacity: 0.8;
-   }
  }
  
+ @keyframes gear-spin {
+   from { transform: rotate(0deg); }
+   to { transform: rotate(360deg); }
+ }
+ 
+ // Main settings panel
  .settings-panel {
    position: absolute;
    top: 60px;
    right: 15px;
-   width: 300px;
+   width: 350px;
+   max-height: calc(100vh - 80px);
    background-color: rgba(25, 28, 32, 0.95);
    border-radius: var(--border-radius-lg);
    box-shadow: var(--shadow-lg);
@@ -89,6 +71,8 @@
    border: 1px solid var(--border-color);
    @include a.slide-up(0.3s);
    transform-origin: top right;
+   display: flex;
+   flex-direction: column;
    
    // Orange accent border
    &::before {
@@ -101,6 +85,7 @@
      background: linear-gradient(to right, var(--primary-color), var(--primary-color-hover));
    }
  
+   // Panel header
    .settings-header {
      display: flex;
      justify-content: space-between;
@@ -124,9 +109,154 @@
      }
    }
    
+   // Tab navigation
+   .settings-tabs {
+     display: flex;
+     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+     
+     .settings-tab {
+       flex: 1;
+       padding: var(--spacing-xs) var(--spacing-sm);
+       background: transparent;
+       color: var(--text-muted);
+       border: none;
+       border-bottom: 3px solid transparent;
+       cursor: pointer;
+       transition: all var(--transition-normal);
+       font-weight: 500;
+       
+       &:hover {
+         color: var(--text-color);
+         background-color: rgba(0, 0, 0, 0.2);
+       }
+       
+       &.active {
+         color: var(--primary-color);
+         border-bottom: 3px solid var(--primary-color);
+       }
+     }
+   }
+   
+   // Content area
    .settings-content {
      padding: var(--spacing-md);
+     overflow-y: auto;
+     flex: 1;
+     @include custom-scrollbar;
      
+     .settings-tab-content {
+       // Animation for tab switching
+       animation: fade-in 0.3s ease-out;
+     }
+     
+     .settings-section {
+       margin-bottom: var(--spacing-lg);
+       
+       h3 {
+         font-size: var(--font-size-md);
+         color: var(--text-color);
+         margin-bottom: var(--spacing-sm);
+         font-weight: 500;
+         border-left: 3px solid var(--primary-color);
+         padding-left: var(--spacing-xs);
+       }
+     }
+     
+     // Form controls
+     .form-group {
+       margin-bottom: var(--spacing-md);
+       
+       label {
+         display: block;
+         margin-bottom: var(--spacing-xxs);
+         color: var(--text-muted);
+         font-size: var(--font-size-sm);
+       }
+     }
+     
+     .settings-input {
+       width: 100%;
+       padding: var(--spacing-xs) var(--spacing-sm);
+       background-color: rgba(0, 0, 0, 0.3);
+       border: 1px solid var(--border-color);
+       border-radius: var(--border-radius-sm);
+       color: var(--text-color);
+       font-family: var(--font-family);
+       
+       &:focus {
+         border-color: var(--primary-color);
+         outline: none;
+       }
+       
+       &:disabled {
+         opacity: 0.6;
+         cursor: not-allowed;
+       }
+     }
+     
+     // Toggle switch
+     .toggle-option {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       margin-bottom: var(--spacing-sm);
+       
+       span {
+         color: var(--text-color);
+       }
+     }
+     
+     .toggle-switch {
+       position: relative;
+       display: inline-block;
+       width: 46px;
+       height: 24px;
+       
+       input {
+         opacity: 0;
+         width: 0;
+         height: 0;
+         
+         &:checked + .toggle-slider {
+           background-color: var(--primary-color);
+           
+           &:before {
+             transform: translateX(22px);
+           }
+         }
+         
+         &:disabled + .toggle-slider {
+           opacity: 0.5;
+           cursor: not-allowed;
+         }
+       }
+       
+       .toggle-slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background-color: rgba(255, 255, 255, 0.2);
+         border-radius: 24px;
+         transition: 0.3s;
+         
+         &:before {
+           position: absolute;
+           content: "";
+           height: 18px;
+           width: 18px;
+           left: 3px;
+           bottom: 3px;
+           background-color: white;
+           border-radius: 50%;
+           transition: 0.3s;
+         }
+       }
+     }
+     
+     // Version info
      .version-info {
        margin-top: var(--spacing-md);
        color: var(--text-muted);
@@ -149,14 +279,50 @@
        }
      }
      
-     .settings-section {
+     // Note box
+     .note-box {
+       background-color: rgba(44, 123, 182, 0.1);
+       border-left: 3px solid var(--secondary-color);
+       padding: var(--spacing-sm);
+       font-size: var(--font-size-sm);
        margin-bottom: var(--spacing-md);
        
-       h3 {
-         font-size: var(--font-size-md);
+       p {
+         margin: 0;
+         color: var(--text-muted);
+       }
+       
+       kbd {
+         background-color: rgba(0, 0, 0, 0.3);
+         border: 1px solid var(--border-color);
+         border-radius: var(--border-radius-sm);
+         padding: 2px 5px;
+         font-family: monospace;
+         font-size: var(--font-size-xs);
          color: var(--text-color);
-         margin-bottom: var(--spacing-xs);
-         font-weight: 500;
+       }
+     }
+   }
+   
+   // Settings button
+   .settings-button {
+     @include button-secondary;
+     width: 100%;
+     margin-bottom: var(--spacing-sm);
+     border-radius: var(--border-radius-md);
+     background-color: rgba(44, 123, 182, 0.5);
+     
+     &:hover {
+       background-color: var(--secondary-color);
+     }
+     
+     &:disabled {
+       opacity: 0.5;
+       cursor: not-allowed;
+       
+       &:hover {
+         background-color: rgba(44, 123, 182, 0.5);
+         transform: none;
        }
      }
    }

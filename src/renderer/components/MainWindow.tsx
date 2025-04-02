@@ -3,14 +3,19 @@ import { Game, LocalConfig, RemoteConfig } from "../../types";
 import "../../styles.scss";
 import { getConfigFileLocal } from "../utils/getConfigFileLocal";
 import { showError } from "../utils/showError";
-import { showWarn } from "../utils/showWarn";
 import { getConfigFileRemote } from "../utils/getConfigFileRemote";
 import { getSevenZipBinPath } from "../utils/getSevenZipBinPath";
 import { initialSetup } from "../utils/initialSetup";
 import { gamesSetup } from "../utils/gamesSetup";
 import { gamesPatch } from "../utils/gamesPatch";
-import { updateConfigJson } from "../utils/updateConfigJson";
-import { enableDebugMode, log, saveLogsToFile } from "../utils/debug";
+import { log } from "../utils/debug";
+
+// Import modularized components
+import InitialSetupScreen from "./InitialSetupScreen";
+import GamePatcher from "./GamePatcher";
+import SettingsPanel from "./SettingsPanel";
+import DebugModeHandler from "./DebugModeHandler";
+import { AppContextProvider } from "./AppContext";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -22,22 +27,7 @@ const MainWindow: React.FC = () => {
   const [didFinishGamesSetup, setDidFinishGamesSetup] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [showSettings, setShowSettings] = useState<boolean>(false);
-
-  // Debug Mode
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Enable debug mode with Ctrl+D
-      if (e.ctrlKey && e.key === 'd') {
-        enableDebugMode();
-        showWarn("Debug mode enabled. Logs will be collected.");
-        log("Debug mode activated by user");
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
 
   // Load initial configuration
   useEffect(() => {
@@ -167,8 +157,10 @@ const MainWindow: React.FC = () => {
     
     try {
       await gamesPatch(gameInfo, setIsUpdating);
+      setIsInitializing(false);
     } catch (e) {
       showError((e as Error).message);
+      setIsInitializing(false);
     }
   };
 
@@ -178,76 +170,45 @@ const MainWindow: React.FC = () => {
     }
   }, [didFinishGamesSetup]);
 
-  // Toggle settings panel
   const toggleSettings = () => {
     setShowSettings(!showSettings);
   };
 
-  // Export logs for settings
-  const handleExportLogs = async () => {
-    const success = await saveLogsToFile();
-    if (success) {
-      showWarn("Debug logs have been saved to launcher-debug.log");
-    } else {
-      showError("Failed to save debug logs");
-    }
+  // Shared app context values
+  const contextValues = {
+    configLocal,
+    configRemote,
+    gameInfo,
+    isUpdating,
+    setIsUpdating
   };
 
   return (
-    <div className="container">
-      <div className="initial-setup">
-        <span className="initial-setup-text">Initializing...</span>
-      </div>
-      
-      {/* Settings button in top right */}
-      <div className="settings-icon" onClick={toggleSettings}>
-        <div className="gear-icon"></div>
-      </div>
-      
-      {/* Settings panel */}
-      {showSettings && (
-        <div className="settings-panel">
-          <div className="settings-header">
-            <h2>Settings</h2>
-            <button className="close-button" onClick={toggleSettings}>×</button>
-          </div>
-          <div className="settings-content">
-            <button className="settings-button" onClick={handleExportLogs}>
-              Export Debug Logs
-            </button>
-            <div className="version-info">
-              <p>Launcher Version: {configRemote?.launcherVer || "Unknown"}</p>
-              <p>Client Version: {gameInfo?.clientVer || "Unknown"}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Main game panel */}
-      <div className="game-container">
+    <AppContextProvider value={contextValues}>
+      <div className="container">
+        <DebugModeHandler />
+        
+        {isInitializing && (
+          <InitialSetupScreen />
+        )}
+        
+        {/* Settings Panel */}
+        <SettingsPanel 
+          isOpen={showSettings} 
+          onClose={toggleSettings} 
+          configRemote={configRemote}
+          gameInfo={gameInfo}
+        />
+        
+        {/* Main Game Container */}
         {gameInfo && (
-          <div
-            id={`game-container-${gameInfo.name}`}
-            className={`game-patcher ${gameInfo.name.toLowerCase()} active`}
-          >
-            <div className={`total-progress ${gameInfo.name}`}>
-              <div className={`total-mid ${gameInfo.name}`}>
-                <div className={`total-bar ${gameInfo.name}`} />
-              </div>
-            </div>
-            <span className={`txt-status ${gameInfo.name} text`}></span>
-            <span className={`txt-progress ${gameInfo.name} text`}></span>
-            <span className={`txt-download-speed ${gameInfo.name} text`}></span>
-            <span className={`txt-time-remaining ${gameInfo.name} text`}></span>
-            <button className={`btn-start ${gameInfo.name}`}>Play</button>
-            <button
-              className={`btn-start disabled ${gameInfo.name}`}
-              style={{ display: "none" }}
-            ></button>
-          </div>
+          <GamePatcher 
+            game={gameInfo}
+            isUpdating={isUpdating}
+          />
         )}
       </div>
-    </div>
+    </AppContextProvider>
   );
 };
 

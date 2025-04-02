@@ -3,11 +3,24 @@
 let debugMode = false;
 const logs: string[] = [];
 
+/**
+ * Enable debug mode to collect logs
+ */
 export const enableDebugMode = (): void => {
   debugMode = true;
   log('Debug mode enabled');
 };
 
+/**
+ * Check if debug mode is currently enabled
+ */
+export const isDebugMode = (): boolean => {
+  return debugMode;
+};
+
+/**
+ * Log a message with optional data payload
+ */
 export const log = (message: string, data?: any): void => {
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] ${message}`;
@@ -21,15 +34,21 @@ export const log = (message: string, data?: any): void => {
   }
 };
 
+/**
+ * Get all collected logs
+ */
 export const getDebugLogs = (): string[] => {
   return [...logs];
 };
 
-export const isDebugMode = (): boolean => {
-  return debugMode;
-};
-
+/**
+ * Save logs to file in the application directory
+ */
 export const saveLogsToFile = async (): Promise<boolean> => {
+  if (!debugMode || logs.length === 0) {
+    return false;
+  }
+  
   try {
     const currentDir = window.electronAPI.sendSync("get-file-path", "");
     const logPath = `${currentDir}\\launcher-debug.log`;

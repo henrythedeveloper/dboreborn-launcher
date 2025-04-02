@@ -1,3 +1,4 @@
+import '@fontsource-variable/exo-2'
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import MainWindow from './renderer/components/MainWindow';

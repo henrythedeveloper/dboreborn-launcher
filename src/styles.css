@@ -62,7 +62,7 @@
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
   --spacing-xxl: 3rem;
-  --font-family: Exo 2 Variable, Segoe UI, Roboto, sans-serif;
+  --font-family: "Exo 2 Variable", "Segoe UI", Roboto, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-md: 1rem;
@@ -303,14 +303,6 @@ button {
  *
  * Base typography styles and text utilities.
  */
-@font-face {
-  font-family: "Exo 2 Variable";
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url(@fontsource-variable/exo-2/files/exo-2-latin-wght-normal.woff2) format("woff2-variations");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 body {
   font-family: var(--font-family);
   font-size: var(--font-size-md);
@@ -1347,7 +1339,7 @@ body {
 /**
  * Settings Panel Styles
  * 
- * Specific styles for the settings panel component.
+ * Comprehensive styles for the modular settings panel with tabs and enhanced UI elements.
  */
 .settings-icon {
   position: absolute;
@@ -1365,48 +1357,42 @@ body {
   transition: background-color var(--transition-normal), transform var(--transition-normal);
   border: 1px solid rgba(255, 138, 0, 0.3);
 }
+.settings-icon .gear-image {
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) invert(1);
+  transition: filter var(--transition-normal), transform var(--transition-normal);
+  animation: gear-spin 10s linear infinite;
+  animation-play-state: paused;
+}
 .settings-icon:hover {
   background-color: rgba(0, 0, 0, 0.8);
   transform: rotate(15deg);
   border-color: var(--primary-color);
+  box-shadow: 0 0 5px var(--primary-color);
+}
+.settings-icon:hover .gear-image {
+  animation-play-state: running;
+  filter: brightness(0) invert(0.8) sepia(0.8) saturate(5) hue-rotate(5deg);
 }
 .settings-icon:active {
   transform: rotate(30deg);
 }
-.settings-icon .gear-icon {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  box-shadow: 0px -5px 0 0 white, 0px 5px 0 0 white, 5px 0px 0 0 white, -5px 0px 0 0 white, 3.5px 3.5px 0 0 white, 3.5px -3.5px 0 0 white, -3.5px 3.5px 0 0 white, -3.5px -3.5px 0 0 white;
-  opacity: 0.8;
-}
-.settings-icon .gear-icon:before {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  left: 0;
-  top: 0;
-}
-.settings-icon .gear-icon:after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: white;
-  border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.6);
-  left: 4px;
-  top: 4px;
-}
 
+@keyframes gear-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .settings-panel {
   position: absolute;
   top: 60px;
   right: 15px;
-  width: 300px;
+  width: 350px;
+  max-height: calc(100vh - 80px);
   background-color: rgba(25, 28, 32, 0.95);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
@@ -1415,6 +1401,8 @@ body {
   border: 1px solid var(--border-color);
   animation: slide-up 0.3s ease-out 0s forwards;
   transform-origin: top right;
+  display: flex;
+  flex-direction: column;
 }
 .settings-panel::before {
   content: "";
@@ -1444,8 +1432,139 @@ body {
   color: transparent;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
+.settings-panel .settings-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.settings-panel .settings-tabs .settings-tab {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-weight: 500;
+}
+.settings-panel .settings-tabs .settings-tab:hover {
+  color: var(--text-color);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.settings-panel .settings-tabs .settings-tab.active {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+}
 .settings-panel .settings-content {
   padding: var(--spacing-md);
+  overflow-y: auto;
+  flex: 1;
+}
+.settings-panel .settings-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.settings-panel .settings-content::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+.settings-panel .settings-content::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: var(--border-radius-pill);
+}
+.settings-panel .settings-content::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color-hover);
+}
+.settings-panel .settings-content .settings-tab-content {
+  animation: fade-in 0.3s ease-out;
+}
+.settings-panel .settings-content .settings-section {
+  margin-bottom: var(--spacing-lg);
+}
+.settings-panel .settings-content .settings-section h3 {
+  font-size: var(--font-size-md);
+  color: var(--text-color);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  border-left: 3px solid var(--primary-color);
+  padding-left: var(--spacing-xs);
+}
+.settings-panel .settings-content .form-group {
+  margin-bottom: var(--spacing-md);
+}
+.settings-panel .settings-content .form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xxs);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+.settings-panel .settings-content .settings-input {
+  width: 100%;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-color);
+  font-family: var(--font-family);
+}
+.settings-panel .settings-content .settings-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+.settings-panel .settings-content .settings-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.settings-panel .settings-content .toggle-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+.settings-panel .settings-content .toggle-option span {
+  color: var(--text-color);
+}
+.settings-panel .settings-content .toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+.settings-panel .settings-content .toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.settings-panel .settings-content .toggle-switch input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+.settings-panel .settings-content .toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+}
+.settings-panel .settings-content .toggle-switch input:disabled + .toggle-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.settings-panel .settings-content .toggle-switch .toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  transition: 0.3s;
+}
+.settings-panel .settings-content .toggle-switch .toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
 }
 .settings-panel .settings-content .version-info {
   margin-top: var(--spacing-md);
@@ -1465,14 +1584,63 @@ body {
   color: var(--primary-color);
   font-weight: 500;
 }
-.settings-panel .settings-content .settings-section {
+.settings-panel .settings-content .note-box {
+  background-color: rgba(44, 123, 182, 0.1);
+  border-left: 3px solid var(--secondary-color);
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-md);
 }
-.settings-panel .settings-content .settings-section h3 {
-  font-size: var(--font-size-md);
+.settings-panel .settings-content .note-box p {
+  margin: 0;
+  color: var(--text-muted);
+}
+.settings-panel .settings-content .note-box kbd {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: 2px 5px;
+  font-family: monospace;
+  font-size: var(--font-size-xs);
   color: var(--text-color);
-  margin-bottom: var(--spacing-xs);
-  font-weight: 500;
+}
+.settings-panel .settings-button {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: none;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: center;
+  background: var(--secondary-color);
+  color: var(--text-on-secondary);
+  width: 100%;
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  background-color: rgba(44, 123, 182, 0.5);
+}
+.settings-panel .settings-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.settings-panel .settings-button:hover:not(:disabled) {
+  background: var(--secondary-color-hover);
+  transform: translateY(-1px);
+}
+.settings-panel .settings-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+.settings-panel .settings-button:hover {
+  background-color: var(--secondary-color);
+}
+.settings-panel .settings-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.settings-panel .settings-button:disabled:hover {
+  background-color: rgba(44, 123, 182, 0.5);
+  transform: none;
 }
 .settings-panel.closing {
   animation: fade-out 0.2s ease-out 0s forwards;
