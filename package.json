@@ -1,6 +1,6 @@
 {
-  "name": "dborebirth-launcher",
-  "productName": "dborebirth-launcher",
+  "name": "dboreborn-launcher",
+  "productName": "dboreborn-launcher",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
