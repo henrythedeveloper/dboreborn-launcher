@@ -26,11 +26,28 @@ body {
   scrollbar-width: thin; // Firefox
   scrollbar-color: var(--primary-color) var(--bg-color); // Firefox
 
-    // Active state
-    &.active {
-        display: block;
-        @include fade-in(0.5s);
-    }
+  // Add a black to transparent overlay from left to right
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(
+      to right,
+      rgba(41, 15, 3, 0.74) 10%,
+      rgba(202, 134, 7, 0) 70%,
+    );
+    pointer-events: none; // Make sure the overlay doesn't block interactions
+  }
+
+  // Active state
+  &.active {
+      display: block;
+      @include fade-in(0.5s);
+  }
 
   // Custom scrollbar for Chrome/Edge/Safari
   &::-webkit-scrollbar {

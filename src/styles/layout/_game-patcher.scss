@@ -16,10 +16,12 @@
   background-size: cover;  
   background-position: center;
   background-repeat: no-repeat;
+
   
   // Specific game background
   &.dbo {
     background-image: url("@assets/bg-dbo.svg");
+    
   }
   
   // Active state
@@ -27,8 +29,8 @@
     display: block;
     @include fade-in(0.5s);
   }
-  
-  // Game logo
+
+  // Legacy logo style
   .game-logo {
     position: absolute;
     top: var(--spacing-xl);
@@ -37,7 +39,7 @@
     height: auto;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
   }
-
+  
   // Text elements
   .text {
     display: block;
@@ -69,96 +71,11 @@
     }
   }
 
-  // Play button with integrated progress
-  .btn-start {
-    @include button-primary;
-    border-radius: var(--border-radius-pill);
-    line-height: 50px;
-    font-weight: 700;
-    font-size: var(--font-size-xxl);
-    min-width: 200px;
+  // Button positioning (but not detailed styling)
+  .game-patcher-button {
     position: absolute;
     top: 2em;
     left: 3em;
     z-index: 2;
-    
-    // Add gradient overlay for more appeal
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0.1) 0%, 
-                rgba(255, 255, 255, 0) 100%);
-      pointer-events: none;
-      border-radius: var(--border-radius-md);
-    }
-    
-    &:hover:not(:disabled):not(.disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-    
-    &:active:not(:disabled):not(.disabled) {
-      transform: translateY(0);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.9;
-    }
-    
-    // Updating state with special styling
-    &.updating {
-      background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color-hover) 100%);
-      position: relative;
-      overflow: hidden;
-      
-      // Animated shine effect for updating state
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(
-          to right, 
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.3) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
-        animation: shine 2s infinite;
-      }
-    }
-    
-    // Disabled state
-    &.disabled {
-      background-color: var(--secondary-color);
-      color: var(--text-on-secondary);
-      opacity: 0.7;
-      cursor: not-allowed;
-      z-index: 1;
-      
-      &:hover {
-        transform: none;
-        box-shadow: none;
-      }
-    }
-    
-    // Ready to play state
-    &.ready {
-      animation: pulse 2s infinite;
-    }
   }
-}
-
-// Shine animation for progress effect
-@keyframes shine {
-  0% { left: -100%; }
-  100% { left: 200%; }
 }

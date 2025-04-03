@@ -1,0 +1,62 @@
+/**
+ * Game Logo Styles
+ * 
+ * Styles for the game logo component that appears above the game patcher button.
+ */
+
+ @use '../abstracts/mixins' as m;
+ @use '../abstracts/variables' as v;
+ @use '../base/animations';
+ 
+ .game-logo-container {
+   position: absolute;
+   top: 30px;
+   left: 3em;
+   display: flex;
+   align-items: center;
+   z-index: 3; // Ensure it appears above the overlay
+   cursor: pointer;
+   transition: transform var(--transition-normal);
+   
+   // Add animation using the defined keyframes instead of mixins
+   animation: fade-in 0.8s ease-out, slide-up 0.8s ease-out;
+   
+   
+   // Add active effect for when the logo is clicked
+   &:active {
+     transform: translateX(-50%) scale(0.98);
+   }
+ }
+ 
+ .game-logo-image {
+   max-width: 280px;
+   height: auto;
+   margin-bottom: var(--spacing-md);
+   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+   transition: filter var(--transition-normal);
+   /* Ensure SVG is properly sized and colored */
+   object-fit: contain;
+ }
+
+ 
+ // Responsive adjustments
+ @media (max-height: 768px) {
+   .game-logo-container {
+     top: 12%; // Position slightly higher on smaller screens
+     
+     .game-logo-image {
+       max-width: 220px; // Slightly smaller logo
+     }
+     
+     .game-title {
+       font-size: var(--font-size-xl); // Smaller title text
+     }
+   }
+ }
+ 
+ // Consider a fallback for when images fail to load
+ .game-logo-image:not([src]), 
+ .game-logo-image[src=""], 
+ .game-logo-image[src="undefined"] {
+   display: none; // Hide broken images
+ }

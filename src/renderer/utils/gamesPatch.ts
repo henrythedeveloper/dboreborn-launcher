@@ -284,7 +284,6 @@ export const gamesPatch = async (
   // Finish installation/update process
   const finish = (): void => {
     setIsUpdating(false);
-    showText(`.txt-status.${game?.name}`, "Game is ready to play");
     showText(`.btn-start.${game?.name}`, "Play");
 
     enableButton();

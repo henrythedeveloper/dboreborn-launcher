@@ -12,7 +12,7 @@ import { log } from "../utils/debug";
 
 // Import modularized components
 import InitialSetupScreen from "./InitialSetupScreen";
-import GamePatcher from "./GamePatcher"; // Updated component
+import GamePatcher from "./GamePatcher"; 
 import SettingsPanel from "./SettingsPanel";
 import NewsSlider from "./NewsSlider";
 import BackToTop from "./BackToTop";

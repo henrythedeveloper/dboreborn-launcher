@@ -1,0 +1,126 @@
+/**
+ * Game Patcher Container-Button Styles
+ * 
+ * Styles for a container that acts as the button with icon and text directly inside
+ */
+
+ @use '../abstracts' as *;
+ @use '../base/animations' as *;
+ 
+ // Container that acts as the button
+ .btn-container {
+   position: absolute;
+   top: 6em;
+   left: 2em;
+   display: flex;
+   align-items: center;
+   background: linear-gradient(to right, rgb(252, 127, 19) , rgb(252, 160, 16));
+   border-radius: var(--border-radius-pill);
+   padding: 0 var(--spacing-lg) 0 var(--spacing-sm);
+   min-width: 220px;
+   height: 60px;
+   font-weight: 700;
+   font-size: var(--font-size-xxl);
+   color: var(--text-on-primary);
+   cursor: pointer;
+   box-shadow: 0px 10px 30px 1px rgba(231, 132, 40, 0.966);
+   overflow: hidden; // Keep overflow hidden for animation effects
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+   z-index: 5;
+   
+   // Handle disabled state
+   &.disabled {
+     opacity: 0.9;
+     cursor: not-allowed;
+     
+     // Keep the icon spinning when disabled
+     .update-icon img {
+       animation: spin 5s linear infinite;
+     }
+   }
+   
+   // Hover effects for the container
+   &:not(.disabled):hover {
+     transform: translateY(-2px);
+     box-shadow: 0px 0px 80px 12px rgba(199, 114, 35, 0.8);
+     
+     // Make the icon rotate on container hover
+     .update-icon img {
+       transform: rotate(360deg);
+     }
+   }
+   
+   &:not(.disabled):active {
+     transform: translateY(0);
+     box-shadow: 0px 0px 40px 5px rgba(172, 35, 199, 0.6);
+   }
+   
+   // Updating state styling
+   &.updating {
+     background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color-hover) 100%);
+     
+     // Animated shine effect while updating
+     &::after {
+       content: '';
+       position: absolute;
+       top: 0;
+       left: -100%;
+       width: 50%;
+       height: 100%;
+       background: linear-gradient(
+         to right,
+         rgba(255, 255, 255, 0) 0%,
+         rgba(255, 255, 255, 0.3) 50%,
+         rgba(255, 255, 255, 0) 100%
+       );
+       z-index: 1;
+       animation: shine 2s infinite;
+     }
+   }
+ }
+ 
+ // Icon styling - now just the image without a background
+ .update-icon {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-right: var(--spacing-sm);
+   
+   img {
+     width: 32px;
+     height: 32px;
+     transition: transform 0.5s ease;
+   }
+   
+   // Animation for updating state
+   &.updating {
+     animation: pulse 2s infinite;
+   }
+ }
+ 
+ // Text styling
+ .btn-text {
+   flex: 1;
+   text-align: center;
+   z-index: 2;
+   position: relative; // Keep above the shine animation
+ }
+ 
+ // Shine animation for progress effect
+ @keyframes shine {
+   0% { left: -100%; }
+   100% { left: 200%; }
+ }
+ 
+ // Spin animation for the icon
+ @keyframes spin {
+   0% { transform: rotate(0deg); }
+   100% { transform: rotate(360deg); }
+ }
+ 
+ // Pulse animation 
+ @keyframes pulse {
+   0% { transform: scale(1); }
+   50% { transform: scale(1.1); }
+   100% { transform: scale(1); }
+ }
