@@ -699,17 +699,6 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--primary-color) var(--bg-color);
 }
-.container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background: linear-gradient(to right, rgba(41, 15, 3, 0.74) 10%, rgba(202, 134, 7, 0) 70%);
-  pointer-events: none;
-}
 .container.active {
   display: block;
   animation: fade-in 0.5s ease-out 0s forwards;
@@ -851,7 +840,7 @@ body {
   background-repeat: no-repeat;
 }
 .game-patcher.dbo {
-  background-image: url("@assets/bg-dbo.svg");
+  background: url("@assets/bg-dbo.svg");
 }
 .game-patcher.active {
   display: block;
@@ -1134,6 +1123,14 @@ body {
   cursor: not-allowed;
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .btn-start {
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--border-radius-sm);
@@ -1225,7 +1222,8 @@ body {
   width: 100%;
   margin-bottom: var(--spacing-sm);
   border-radius: var(--border-radius-md);
-  background-color: rgba(var(--secondary-color), 0.5);
+  background-color: rgba(44, 123, 182, 0.5);
+  position: relative;
 }
 .settings-button:disabled {
   opacity: 0.6;
@@ -1240,6 +1238,31 @@ body {
 }
 .settings-button:hover {
   background-color: var(--secondary-color);
+}
+.settings-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.settings-button:disabled:hover {
+  background-color: rgba(44, 123, 182, 0.5);
+  transform: none;
+}
+.settings-button.is-loading {
+  color: transparent;
+  pointer-events: none;
+}
+.settings-button.is-loading::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid var(--text-on-secondary);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 /**
@@ -1983,9 +2006,9 @@ body {
   }
 }
 /**
- * Server Status Styles
+ * Enhanced Server Status Styles for MMO Launcher
  * 
- * Styles for the server status indicator component.
+ * Styles for the server status indicator and expanded panel.
  */
 .server-status {
   position: absolute;
@@ -2013,6 +2036,15 @@ body {
   font-size: var(--font-size-xs);
   font-weight: 500;
   transition: color var(--transition-normal);
+  margin-right: 6px;
+}
+.server-status .population-text {
+  font-size: var(--font-size-xs);
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-pill);
+  margin-left: 4px;
+  color: var(--text-muted);
 }
 .server-status.online .status-indicator {
   background-color: var(--success-color);
@@ -2030,13 +2062,21 @@ body {
 .server-status.offline .status-text {
   color: var(--danger-color);
 }
-.server-status.checking .status-indicator {
+.server-status.maintenance .status-indicator {
   background-color: var(--warning-color);
   box-shadow: 0 0 5px var(--warning-color);
   animation: pulse-warning 2s infinite;
 }
-.server-status.checking .status-text {
+.server-status.maintenance .status-text {
   color: var(--warning-color);
+}
+.server-status.checking .status-indicator {
+  background-color: var(--text-muted);
+  box-shadow: 0 0 5px var(--text-muted);
+  animation: pulse-warning 2s infinite;
+}
+.server-status.checking .status-text {
+  color: var(--text-muted);
 }
 .server-status:hover {
   background-color: rgba(0, 0, 0, 0.8);
@@ -2078,6 +2118,168 @@ body {
   transform: rotate(45deg);
   border-left: 1px solid var(--border-color);
   border-top: 1px solid var(--border-color);
+}
+.server-status.expanded {
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.server-info-panel {
+  position: absolute;
+  top: 65px;
+  right: 15px;
+  width: 320px;
+  background-color: rgba(25, 28, 32, 0.95);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+  animation: fade-in 0.3s ease-out, slide-up 0.3s ease-out;
+}
+.server-info-panel .server-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+.server-info-panel .server-info-header h3 {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--text-color);
+}
+.server-info-panel .server-info-content {
+  padding: var(--spacing-md);
+}
+.server-info-panel .server-status-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) 0;
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.server-info-panel .server-status-large .status-indicator-large {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: var(--spacing-sm);
+}
+.server-info-panel .server-status-large .status-text-large {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+.server-info-panel .server-status-large.online .status-indicator-large {
+  background-color: var(--success-color);
+  box-shadow: 0 0 8px var(--success-color);
+}
+.server-info-panel .server-status-large.online .status-text-large {
+  color: var(--success-color);
+}
+.server-info-panel .server-status-large.offline .status-indicator-large {
+  background-color: var(--danger-color);
+  box-shadow: 0 0 8px var(--danger-color);
+}
+.server-info-panel .server-status-large.offline .status-text-large {
+  color: var(--danger-color);
+}
+.server-info-panel .server-status-large.maintenance .status-indicator-large {
+  background-color: var(--warning-color);
+  box-shadow: 0 0 8px var(--warning-color);
+}
+.server-info-panel .server-status-large.maintenance .status-text-large {
+  color: var(--warning-color);
+}
+.server-info-panel .server-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+.server-info-panel .server-stats .stat-item {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+}
+.server-info-panel .server-stats .stat-item:first-child {
+  grid-column: 1/-1;
+}
+.server-info-panel .server-stats .stat-item .stat-label {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.server-info-panel .server-stats .stat-item .stat-value {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--primary-color);
+}
+.server-info-panel .maintenance-info, .server-info-panel .offline-info {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-md);
+}
+.server-info-panel .maintenance-info .maintenance-message, .server-info-panel .maintenance-info .offline-message, .server-info-panel .offline-info .maintenance-message, .server-info-panel .offline-info .offline-message {
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-sm);
+}
+.server-info-panel .maintenance-info .maintenance-time, .server-info-panel .offline-info .maintenance-time {
+  color: var(--warning-color);
+  font-weight: 500;
+}
+.server-info-panel .maintenance-info .report-button, .server-info-panel .offline-info .report-button {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: none;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: center;
+  background: var(--secondary-color);
+  color: var(--text-on-secondary);
+  width: 100%;
+  margin-top: var(--spacing-sm);
+}
+.server-info-panel .maintenance-info .report-button:disabled, .server-info-panel .offline-info .report-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.server-info-panel .maintenance-info .report-button:hover:not(:disabled), .server-info-panel .offline-info .report-button:hover:not(:disabled) {
+  background: var(--secondary-color-hover);
+  transform: translateY(-1px);
+}
+.server-info-panel .maintenance-info .report-button:active:not(:disabled), .server-info-panel .offline-info .report-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+.server-info-panel .server-info-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+}
+.server-info-panel .server-info-footer p {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin: 0;
+}
+.server-info-panel .server-info-footer .refresh-button {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-size: var(--font-size-xs);
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.server-info-panel .server-info-footer .refresh-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 @keyframes pulse-success {
@@ -2136,7 +2338,7 @@ body {
   box-shadow: 0px 10px 30px 1px rgba(231, 132, 40, 0.966);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  z-index: 5;
+  z-index: 11;
 }
 .btn-container.disabled {
   opacity: 0.9;
@@ -2152,10 +2354,6 @@ body {
 .btn-container:not(.disabled):hover .update-icon img {
   transform: rotate(360deg);
 }
-.btn-container:not(.disabled):active {
-  transform: translateY(0);
-  box-shadow: 0px 0px 40px 5px rgba(172, 35, 199, 0.6);
-}
 .btn-container.updating {
   background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color-hover) 100%);
 }
@@ -2167,7 +2365,7 @@ body {
   width: 50%;
   height: 100%;
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
-  z-index: 1;
+  z-index: 12;
   animation: shine 2s infinite;
 }
 
@@ -2178,8 +2376,10 @@ body {
   margin-right: var(--spacing-sm);
 }
 .update-icon img {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
+  -o-object-fit: contain;
+     object-fit: contain;
   transition: transform 0.5s ease;
 }
 .update-icon.updating {
@@ -2237,7 +2437,7 @@ body {
   left: 3em;
   display: flex;
   align-items: center;
-  z-index: 3;
+  z-index: 11;
   cursor: pointer;
   transition: transform var(--transition-normal);
   animation: fade-in 0.8s ease-out, slide-up 0.8s ease-out;

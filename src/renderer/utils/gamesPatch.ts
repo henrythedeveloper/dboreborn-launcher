@@ -3,12 +3,12 @@ import {
   addCacheBustingSuffix,
   getFileNameFromUrl, 
   extract7zFile, 
-  showError, 
-  showText 
+  showError
 } from "./utilities";
 import { updateConfigJson } from "./updateConfigJson";
 import api from "./electronAPI";
 import { log } from "./debug";
+import { dispatchStatusUpdate, dispatchGameReady } from "./launcherEvents";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -51,43 +51,6 @@ export const gamesPatch = async (
     return;
   }
   
-  // UI elements
-  const startButton = document.querySelector(`.btn-start.${game?.name}`) as HTMLButtonElement | null;
-
-  if (!startButton) {
-    console.error(`UI elements for game ${game.name} not found`);
-    return;
-  }
-
-  /**
-   * Disables button and adds updating class
-   */
-  const disableButton = () => {
-    startButton.disabled = true;
-    startButton.classList.add('updating');
-  };
-  
-  /**
-   * Enables button and removes updating class
-   */
-  const enableButton = () => {
-    startButton.disabled = false;
-    startButton.classList.remove('updating');
-  };
-  
-  /**
-   * Set up button for action
-   */
-  const setupButton = (buttonText: string, clickHandler: EventListener) => {
-    setIsUpdating(false);
-    // Remove any existing handlers
-    startButton.removeEventListener("click", handlePatchClick);
-    startButton.removeEventListener("click", handleInstallClick);
-    // Add the new handler
-    startButton.addEventListener("click", clickHandler);
-    showText(`.btn-start.${game?.name}`, buttonText);
-  };
-
   /**
    * Generic download and extract function for both client and patches
    */
@@ -97,7 +60,6 @@ export const gamesPatch = async (
     index: number = 0,
     onComplete: () => Promise<void>
   ): Promise<void> => {
-    disableButton();
     setIsUpdating(true);
     
     try {
@@ -119,11 +81,14 @@ export const gamesPatch = async (
         await api.deleteFile(filePath);
       }
 
-      // Set status message
+      // Set status message using the utility function
       const statusMessage = downloadType === 'client' 
         ? "Downloading Client" 
         : `Downloading patch ${index}`;
-      showText(`.txt-status.${game?.name}`, statusMessage);
+      
+      // Use our utility function to dispatch the status update event
+      dispatchStatusUpdate(statusMessage);
+      log(`Status: ${statusMessage}`);
 
       // Start download
       log(`Starting ${downloadType} download: ${url}`);
@@ -141,11 +106,14 @@ export const gamesPatch = async (
       const handleDownloadComplete = async (): Promise<void> => {
         api.removeListener(`download ${downloadType} complete`, handleDownloadComplete);
         
-        // Set extraction status
+        // Set extraction status using our utility function
         const extractMessage = downloadType === 'client' 
           ? "Extracting client" 
           : `Extracting patch ${index}`;
-        showText(`.txt-status.${game?.name}`, extractMessage);
+          
+        // Use our utility function to dispatch the status update event
+        dispatchStatusUpdate(extractMessage);
+        log(`Status: ${extractMessage}`);
         
         try {
           // Extract the file
@@ -168,7 +136,6 @@ export const gamesPatch = async (
         } catch (error) {
           showError(`Error extracting ${downloadType}: ${(error as Error).message}`);
           setIsUpdating(false);
-          enableButton();
         }
       };
 
@@ -177,27 +144,12 @@ export const gamesPatch = async (
     } catch (error) {
       showError(`Error during ${downloadType} update: ${(error as Error).message}`);
       setIsUpdating(false);
-      enableButton();
     }
   };
 
-  // Wait for install click
-  const waitForInstallClick = async (): Promise<void> => {
-    setupButton("Install", handleInstallClick);
-  };
-
-  // Wait for client update click
-  const waitForClientUpdateClick = async (): Promise<void> => {
-    setupButton("Update Client", handleInstallClick);
-  };
-  
-  // Wait for patch click
-  const waitForPatchClick = async (): Promise<void> => {
-    setupButton("Update", handlePatchClick);
-  };
-
   // Handle install/update client click
-  const handleInstallClick = async (): Promise<void> => {
+  const handleInstallClient = async (): Promise<void> => {
+    log("Starting client installation");
     await downloadAndExtract(
       game.clientUrl, 
       'client', 
@@ -220,15 +172,10 @@ export const gamesPatch = async (
     );
   };
 
-  // Handle patch click
-  const handlePatchClick = async (): Promise<void> => {
-    await handlePatches();
-  };
-
   // Handle patches function
   const handlePatches = async (): Promise<void> => {
     setIsUpdating(true);
-    disableButton();
+    log("Starting patch installation");
 
     const patchesToDownload = game.patchUrls.slice(gameLocal.patchVer);
     
@@ -253,11 +200,9 @@ export const gamesPatch = async (
         'patch', 
         patchIndex,
         async () => {
-          // Show success message
-          showText(
-            `.txt-status.${game.name}`,
-            `Patch ${patchIndex} applied`
-          );
+          // Show success message using our utility function
+          dispatchStatusUpdate(`Patch ${patchIndex} applied`);
+          log(`Patch ${patchIndex} applied`);
 
           // Update patch version in config
           await updateConfigJson(
@@ -284,28 +229,16 @@ export const gamesPatch = async (
   // Finish installation/update process
   const finish = (): void => {
     setIsUpdating(false);
-    showText(`.btn-start.${game?.name}`, "Play");
-
-    enableButton();
-    startButton.classList.add('ready');
     
-    // Remove old handlers and set up game launch
-    startButton.removeEventListener("click", handleInstallClick);
-    startButton.removeEventListener("click", handlePatchClick);
-    startButton.addEventListener("click", async () => {
-      const result = await api.startGame(game.startCmd, currentDir + `\\${game.name}\\`);
-      if (!result.success) {
-        showError(`Failed to start game: ${result.error}`);
-        return;
-      }
-      api.sendMessage("close-app");
-    });
+    // Use our utility function to dispatch the game ready event
+    dispatchGameReady();
+    log(`Game ${game.name} is ready to play`);
   };
 
   // Download error event handler
   const handleDownloadError = (): void => {
     showError(`Error while downloading a file`);
-    enableButton();
+    setIsUpdating(false);
   };
 
   // Set up event listeners
@@ -313,19 +246,22 @@ export const gamesPatch = async (
 
   // Initialize the game state
   const init = async (): Promise<void> => {
-    if (
-      gameLocal?.clientVer === 0 &&
-      game?.clientVer > gameLocal?.clientVer
-    ) {
-      await waitForInstallClick();
-    } else if (
-      gameLocal?.clientVer > 0 &&
-      game?.clientVer > gameLocal?.clientVer
-    ) {
-      await waitForClientUpdateClick();
+    // Determine what actions are needed based on versions
+    if (gameLocal?.clientVer === 0 && game?.clientVer > gameLocal?.clientVer) {
+      // Client needs installation
+      log("Client needs installation");
+      await handleInstallClient();
+    } else if (gameLocal?.clientVer > 0 && game?.clientVer > gameLocal?.clientVer) {
+      // Client needs updating
+      log("Client needs updating");
+      await handleInstallClient();
     } else if (game?.patchUrls?.length > gameLocal?.patchVer) {
-      await waitForPatchClick();
+      // Patches needed
+      log("Patches needed");
+      await handlePatches();
     } else {
+      // Everything is up to date
+      log("Game is up to date");
       finish();
     }
   };
@@ -335,6 +271,5 @@ export const gamesPatch = async (
   } catch (error) {
     showError(`Initialization error: ${(error as Error).message}`);
     setIsUpdating(false);
-    enableButton();
   }
 };

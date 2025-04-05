@@ -98,6 +98,12 @@
   }
 }
 
+// Animation for the loading spinner
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 // Game launcher specific button - extended styling for btn-start
 .btn-start {
   @include button-primary;
@@ -172,9 +178,40 @@
   width: 100%;
   margin-bottom: var(--spacing-sm);
   border-radius: var(--border-radius-md);
-  background-color: rgba(var(--secondary-color), 0.5);
+  background-color: rgba(44, 123, 182, 0.5);
+  position: relative;
   
   &:hover {
     background-color: var(--secondary-color);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background-color: rgba(44, 123, 182, 0.5);
+      transform: none;
+    }
+  }
+  
+  // Loading state with spinner
+  &.is-loading {
+    color: transparent;
+    pointer-events: none;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      border: 2px solid var(--text-on-secondary);
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
   }
 }

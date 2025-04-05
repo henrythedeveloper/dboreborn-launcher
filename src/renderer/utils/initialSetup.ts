@@ -2,11 +2,12 @@ import { LocalConfig, RemoteConfig } from '../../types';
 import {
   addCacheBustingSuffix,
   getFileNameFromUrl,
-  showError,
-  showText
+  showError
 } from './utilities';
 import { updateConfigJson } from './updateConfigJson';
 import api from './electronAPI';
+import { log } from './debug';
+import { dispatchGlobalStatus } from './launcherEvents';
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -29,7 +30,8 @@ export const initialSetup = async (
         configRemote?.launcherVer > configLocal?.launcherVer &&
         !isDevelopment
       ) {
-        showText(".initial-setup-text", "Downloading new launcher...");
+        // Use our utility function to update the status
+        dispatchGlobalStatus("Downloading new launcher...");
 
         const { exists } = await api.checkFileExists(launcherNewPath);
         if (exists) {
@@ -75,7 +77,8 @@ export const initialSetup = async (
         });
       }
 
-      showText(".initial-setup-text", "Launcher already updated");
+      // Use our utility function to update the status
+      dispatchGlobalStatus("Launcher already updated");
       const setupElement = document.querySelector(".initial-setup");
       if (setupElement instanceof HTMLElement) {
         setupElement.style.setProperty("display", "none");

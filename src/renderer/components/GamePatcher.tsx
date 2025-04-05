@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Game } from '../../types';
 import { useAppContext } from './AppContext';
 import gameIcon from '../assets/icons/db-update.png';
 import HeroCharacter from './HeroCharacter';
 import GameLogo from './GameLogo';
+import { addLauncherEventListener } from '../utils/launcherEvents';
+import { log } from '../utils/debug';
 
 interface GamePatcherProps {
   game: Game;
@@ -11,13 +13,28 @@ interface GamePatcherProps {
 }
 
 /**
- * Game patcher with a container that acts as the button
+ * Game patcher component for a single-game launcher
  */
 const GamePatcher: React.FC<GamePatcherProps> = ({ game, isUpdating }) => {
   const [downloadProgress, setDownloadProgress] = useState<number>(0);
   const [downloadSpeed, setDownloadSpeed] = useState<string>('');
-  const [timeRemaining, setTimeRemaining] = useState<string>('');
   const [statusText, setStatusText] = useState<string>('');
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const { setIsUpdating } = useAppContext();
+  
+  // Create callback handlers once to avoid recreating on each render
+  const handleStatusUpdate = useCallback((detail: { status: string }) => {
+    if (detail.status) {
+      setStatusText(detail.status);
+      log(`Status updated: ${detail.status}`);
+    }
+  }, []);
+  
+  const handleGameReady = useCallback((detail: { status: string }) => {
+    setIsReady(true);
+    setStatusText(detail.status);
+    log('Game is ready to play');
+  }, []);
   
   // Listen for download progress updates
   useEffect(() => {
@@ -35,49 +52,73 @@ const GamePatcher: React.FC<GamePatcherProps> = ({ game, isUpdating }) => {
       setDownloadProgress(Math.floor(progress.percent));
     };
     
+    // Set up event listeners using our utility
     window.electronAPI.receive('download progress', handleDownloadProgress);
     window.electronAPI.onExtractionProgress(handleExtractionProgress);
     
+    // Use the new utility functions for custom events
+    const removeStatusListener = addLauncherEventListener('launcher-status-update', handleStatusUpdate);
+    const removeReadyListener = addLauncherEventListener('launcher-game-ready', handleGameReady);
+    
+    // Clean up function
     return () => {
       window.electronAPI.removeListener('download progress', handleDownloadProgress);
       window.electronAPI.removeExtractionListener(handleExtractionProgress);
+      
+      // Call the cleanup functions returned by addLauncherEventListener
+      removeStatusListener();
+      removeReadyListener();
     };
-  }, []);
+  }, [handleStatusUpdate, handleGameReady]);
   
-  // Update status text based on isUpdating and progress
-  useEffect(() => {
-    if (!isUpdating) {
-      setStatusText('');
-    }
-  }, [isUpdating]);
-  
-  // Handle container click - main action handler
+  // Handle button click - main action handler
   const handleButtonClick = () => {
-    if (!isUpdating) {
-      console.log("Button clicked");
-      // Add your action for when the button is clicked
-      // e.g., start download or launch game
+    if (isReady && !isUpdating) {
+      // Launch the game
+      const currentDir = window.electronAPI.sendSync("get-file-path", "");
+      window.electronAPI.spawnProcess({
+        command: game.startCmd,
+        options: { cwd: `${currentDir}\\${game.name}\\` }
+      }).then(() => {
+        window.electronAPI.sendMessage("close-app");
+      }).catch((error) => {
+        console.error("Failed to start game:", error);
+      });
+    } else if (!isUpdating) {
+      // Set updating flag to trigger gamesPatch
+      setIsUpdating(true);
+    }
+  };
+  
+  // Determine button text based on state
+  const getButtonText = () => {
+    if (isUpdating) {
+      return `Downloading... ${downloadProgress}%`;
+    } else if (isReady) {
+      return 'Play';
+    } else {
+      return 'Download';
     }
   };
   
   return (
     <div className="game-container">
       <div
-        id={`game-container-${game.name}`}
-        className={`game-patcher ${game.name.toLowerCase()} active`}
+        id="game-container"
+        className="game-patcher active"
       >
         {/* Add the game logo above the patcher */}
         <GameLogo game={game} />
 
-         {/* Add the hero character to the right side */}
-         <HeroCharacter 
+        {/* Add the hero character to the right side */}
+        <HeroCharacter 
           game={game}
           position="right"
-          characterName={game.name === "DBO" ? "Goku" : undefined}
         />
+        
         {/* Container acting as the button with icon and text directly inside */}
         <div 
-          className={`btn-container ${game.name} ${isUpdating ? 'updating' : ''} ${isUpdating ? 'disabled' : ''}`}
+          className={`btn-container ${isUpdating ? 'updating' : ''} ${isUpdating ? 'disabled' : ''}`}
           onClick={handleButtonClick}
           role="button"
           tabIndex={0}
@@ -94,18 +135,16 @@ const GamePatcher: React.FC<GamePatcherProps> = ({ game, isUpdating }) => {
           
           {/* Text content */}
           <div className="btn-text">
-            {isUpdating ?
-              `Downloading... ${downloadProgress}%` :
-              (downloadProgress === 100 ? 'Play' : 'Download')}
+            {getButtonText()}
           </div>
         </div>
         
         {/* Status text elements */}
-        <span className={`txt-status ${game.name} text`}>{statusText}</span>
+        <span className="txt-status text">{statusText}</span>
         
         {/* Optional info text that could be shown below the button */}
         {isUpdating && downloadSpeed && (
-          <span className={`txt-download-info ${game.name} text`}>
+          <span className="txt-download-info text">
             {downloadSpeed}
           </span>
         )}

@@ -18,6 +18,8 @@ interface AppContextType {
   gameInfo: Game | null;
   isUpdating: boolean;
   setIsUpdating: (isUpdating: boolean) => void;
+  setGameInfo: (gameInfo: Game | null) => void;
+  setConfigRemote: (configRemote: RemoteConfig | null) => void;
   newsItems?: NewsItem[];
   setNewsItems?: (news: NewsItem[]) => void;
 }
@@ -29,6 +31,8 @@ const defaultContext: AppContextType = {
   gameInfo: null,
   isUpdating: false,
   setIsUpdating: () => {},
+  setGameInfo: () => {},
+  setConfigRemote: () => {},
   newsItems: [],
   setNewsItems: () => {}
 };

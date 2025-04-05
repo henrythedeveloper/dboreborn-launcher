@@ -4,6 +4,8 @@ import gearIcon from '../assets/icons/gear-icon.png';
 import { saveLogsToFile, isDebugMode } from '../utils/debug';
 import { showWarn } from '../utils/showWarn';
 import { showError } from '../utils/showError';
+import { checkForUpdates } from '../utils/checkForUpdates';
+import { useAppContext } from './AppContext';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -13,7 +15,7 @@ interface SettingsPanelProps {
 }
 
 /**
- * Settings panel component with various configuration options
+ * Settings panel component
  */
 const SettingsPanel: React.FC<SettingsPanelProps> = ({
   isOpen,
@@ -22,6 +24,16 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
   gameInfo
 }) => {
   const [activeTab, setActiveTab] = useState('general');
+  const [isChecking, setIsChecking] = useState(false);
+  
+  // Get required context values
+  const { 
+    configLocal, 
+    setGameInfo, 
+    setConfigRemote, 
+    isUpdating, 
+    setIsUpdating 
+  } = useAppContext();
   
   // Export logs handler
   const handleExportLogs = async () => {
@@ -33,33 +45,61 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
     }
   };
   
-  // Get current app directory
-    const handleOpenAppDirectory = () => {
-        const currentDir = window.electronAPI.sendSync("get-file-path", "");
-        if (currentDir) {
-        window.electronAPI.spawnProcess({ 
-            command: `explorer "${currentDir}"`, 
-            options: {} 
-        });
-        }
-    };
-  
   // Open game directory
-    const handleOpenGameDirectory = () => {
-        if (!gameInfo) return;
-        
-        const currentDir = window.electronAPI.sendSync("get-file-path", "");
-        if (currentDir) {
-        window.electronAPI.spawnProcess({ 
-            command: `explorer "${currentDir}\\${gameInfo.name}"`, 
-            options: {} 
-        });
-        }
-    };
+  const handleOpenGameDirectory = () => {
+    if (!gameInfo) return;
+    
+    const currentDir = window.electronAPI.sendSync("get-file-path", "");
+    if (currentDir) {
+      window.electronAPI.spawnProcess({ 
+        command: `explorer "${currentDir}\\${gameInfo.name}"`, 
+        options: {} 
+      });
+    }
+  };
+  
+  // Get current app directory
+  const handleOpenAppDirectory = () => {
+    const currentDir = window.electronAPI.sendSync("get-file-path", "");
+    if (currentDir) {
+      window.electronAPI.spawnProcess({ 
+        command: `explorer "${currentDir}"`, 
+        options: {} 
+      });
+    }
+  };
   
   // Handler for checking for updates manually
-  const handleCheckForUpdates = () => {
-    showWarn("Checking for updates is not implemented yet");
+  const handleCheckForUpdates = async () => {
+    if (!configLocal) {
+      showError("Local configuration not available");
+      return;
+    }
+    
+    if (isChecking || isUpdating) {
+      showWarn("Update process already in progress");
+      return;
+    }
+    
+    setIsChecking(true);
+    
+    try {
+      const updateResult = await checkForUpdates(
+        configLocal,
+        setIsUpdating,
+        setGameInfo,
+        setConfigRemote
+      );
+      
+      if (!updateResult) {
+        // No updates found or needed
+        showWarn("Your game client is up to date!");
+      }
+    } catch (error) {
+      showError(`Error during update check: ${(error as Error).message}`);
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   return (
@@ -105,9 +145,20 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               <div className="settings-tab-content">
                 <div className="settings-section">
                   <h3>Launcher</h3>
-                  <button className="settings-button" onClick={handleCheckForUpdates}>
-                    Check for Updates
+                  <button 
+                    className={`settings-button ${isChecking || isUpdating ? 'is-loading' : ''}`}
+                    onClick={handleCheckForUpdates}
+                    disabled={isChecking || isUpdating}
+                  >
+                    {isChecking ? 'Checking...' : 'Check for Updates'}
                   </button>
+                  <div className="toggle-option">
+                    <span>Close Launcher on Game Start</span>
+                    <label className="toggle-switch">
+                      <input type="checkbox" defaultChecked={true} />
+                      <span className="toggle-slider"></span>
+                    </label>
+                  </div>
                   <div className="toggle-option">
                     <span>Auto-start Game After Update</span>
                     <label className="toggle-switch">
@@ -118,7 +169,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 </div>
                 
                 <div className="version-info">
-                  <p>Launcher Version: <span>{configRemote?.launcherVer || "Unknown"}</span></p>
+                  <p>Launcher Version: <span>{configLocal?.launcherVer || configRemote?.launcherVer || "Unknown"}</span></p>
                   <p>Client Version: <span>{gameInfo?.clientVer || "Unknown"}</span></p>
                 </div>
               </div>
@@ -129,16 +180,13 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
               <div className="settings-tab-content">
                 <div className="settings-section">
                   <h3>Game Settings</h3>
-                  <button className="settings-button" onClick={handleOpenGameDirectory}>
+                  <button 
+                    className="settings-button" 
+                    onClick={handleOpenGameDirectory}
+                    disabled={!gameInfo}
+                  >
                     Open Game Directory
                   </button>
-                  <div className="toggle-option">
-                    <span>Close Launcher on Game Start</span>
-                    <label className="toggle-switch">
-                      <input type="checkbox" defaultChecked={true} />
-                      <span className="toggle-slider"></span>
-                    </label>
-                  </div>
                 </div>
                 
                 <div className="settings-section">
@@ -176,6 +224,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({
                       type="text" 
                       className="settings-input" 
                       placeholder="https://example.com/config.json" 
+                      value={configLocal?.updaterUrl || ""}
                       disabled 
                     />
                   </div>

@@ -14,7 +14,7 @@
    left: 3em;
    display: flex;
    align-items: center;
-   z-index: 3; // Ensure it appears above the overlay
+   z-index: 11; // Ensure it appears above the overlay
    cursor: pointer;
    transition: transform var(--transition-normal);
    

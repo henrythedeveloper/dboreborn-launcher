@@ -2,38 +2,53 @@ import React, { useState, useEffect } from 'react';
 import { log } from '../utils/debug';
 
 interface ServerStatusProps {
-  serverUrl?: string; // Optional URL to check server status
-  pollingInterval?: number; // How often to check status in milliseconds
+  serverUrl?: string;
+  pollingInterval?: number;
+}
+
+// Sample server data structure
+interface ServerData {
+  status: 'online' | 'offline' | 'maintenance';
+  message?: string;
 }
 
 const ServerStatus: React.FC<ServerStatusProps> = ({ 
-  serverUrl = 'http://localhost:8002/status', // Default URL, replace with your actual API endpoint
-  pollingInterval = 30000 // Check every 30 seconds by default
+  serverUrl = 'http://localhost:8002/status',
+  pollingInterval = 30000
 }) => {
-  const [isOnline, setIsOnline] = useState<boolean | null>(null);
+  const [serverData, setServerData] = useState<ServerData | null>(null);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
   // Function to check server status
   const checkServerStatus = async () => {
     try {
-      // In a real implementation, you would ping your server:
-      // const response = await fetch(serverUrl, { 
-      //   method: 'GET',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   // Set short timeout to avoid long waits
-      //   signal: AbortSignal.timeout(5000) 
-      // });
-      // setIsOnline(response.ok);
+      // In a real implementation, you would fetch from your server:
+      // const response = await fetch(serverUrl);
+      // const data = await response.json();
+      // setServerData(data);
       
-      // For demo purposes, let's simulate a response
+      // For demo purposes, let's simulate server data
       // In production, replace this with actual server checks
-      const mockOnline = Math.random() > 0.3; // 70% chance server is online
-      setIsOnline(mockOnline);
+      const mockStatus = Math.random() > 0.2 
+        ? 'online' 
+        : (Math.random() > 0.5 ? 'offline' : 'maintenance');
+        
+      const mockData: ServerData = {
+        status: mockStatus as 'online' | 'offline' | 'maintenance',
+        message: mockStatus === 'maintenance' 
+          ? 'Scheduled maintenance in progress. The server will be back soon!'
+          : (mockStatus === 'offline' ? 'The server is currently experiencing technical difficulties.' : undefined)
+      };
+      
+      setServerData(mockData);
       setLastChecked(new Date());
-      log(`Server status checked: ${mockOnline ? 'online' : 'offline'}`);
+      log(`Server status checked: ${mockStatus}`);
     } catch (error) {
-      setIsOnline(false);
+      setServerData({
+        status: 'offline',
+        message: 'Could not connect to the server status service.'
+      });
       setLastChecked(new Date());
       log('Error checking server status:', error);
     }
@@ -68,12 +83,10 @@ const ServerStatus: React.FC<ServerStatusProps> = ({
   let statusLabel = 'Checking...';
   let statusClass = 'checking';
   
-  if (isOnline === true) {
-    statusLabel = 'Online';
-    statusClass = 'online';
-  } else if (isOnline === false) {
-    statusLabel = 'Offline';
-    statusClass = 'offline';
+  if (serverData) {
+    statusLabel = serverData.status === 'online' ? 'Online' : 
+                 (serverData.status === 'maintenance' ? 'Maintenance' : 'Offline');
+    statusClass = serverData.status;
   }
 
   return (
@@ -81,6 +94,7 @@ const ServerStatus: React.FC<ServerStatusProps> = ({
       className={`server-status ${statusClass}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={checkServerStatus}
     >
       <div className="status-indicator"></div>
       <span className="status-text">{statusLabel}</span>
@@ -89,6 +103,7 @@ const ServerStatus: React.FC<ServerStatusProps> = ({
       {isHovered && (
         <div className="status-tooltip">
           <p>Server Status: <strong>{statusLabel}</strong></p>
+          {serverData?.message && <p>{serverData.message}</p>}
           <p>Last checked: {getLastCheckedText()}</p>
           <p className="tooltip-hint">Click to check now</p>
         </div>
