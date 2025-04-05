@@ -839,9 +839,6 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
-.game-patcher.dbo {
-  background: url("@assets/bg-dbo.svg");
-}
 .game-patcher.active {
   display: block;
   animation: fade-in 0.5s ease-out 0s forwards;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Game } from '../../types';
 import { useAppContext } from './AppContext';
 import gameIcon from '../assets/icons/db-update.png';
+import backgroundImage from '../assets/bg-dbo.svg';
 import HeroCharacter from './HeroCharacter';
 import GameLogo from './GameLogo';
 import { addLauncherEventListener } from '../utils/launcherEvents';
@@ -102,7 +103,15 @@ const GamePatcher: React.FC<GamePatcherProps> = ({ game, isUpdating }) => {
   };
   
   return (
-    <div className="game-container">
+    <div 
+    className="game-container"
+    style={{ 
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}
+    
+    >
       <div
         id="game-container"
         className="game-patcher active"

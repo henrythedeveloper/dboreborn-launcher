@@ -16,13 +16,6 @@
   background-size: cover;  
   background-position: center;
   background-repeat: no-repeat;
-
-  
-  // Specific game background
-  &.dbo {
-    background: url("@assets/bg-dbo.svg");
-    
-  }
   
   // Active state
   &.active {
